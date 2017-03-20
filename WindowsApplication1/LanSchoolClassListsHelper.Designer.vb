@@ -49,15 +49,16 @@ Partial Class LanSchoolClassListsHelper
         Me.ClassCountLabel = New System.Windows.Forms.Label()
         Me.StudentCountLabel = New System.Windows.Forms.Label()
         Me.StudentListBoxRCMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.RefreshStuListBoxRCMenuStrip = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteStuListBoxRCMenuStrip = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddStuListBoxRCMenuStrip = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClassListBoxRCMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.ClassListBoxRCMenuDelete = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ClassListBoxRCMenuAdd = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RefreshStuListBoxRCMenuStrip = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.RefreshClassListBoxRCMenuStrip = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ClassListBoxRCMenuDelete = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClassListBoxRCMenuAdd = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddTeacherToClassToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.StudentListBoxRCMenuStrip.SuspendLayout()
         Me.ClassListBoxRCMenuStrip.SuspendLayout()
@@ -292,6 +293,17 @@ Partial Class LanSchoolClassListsHelper
         Me.StudentListBoxRCMenuStrip.Name = "StudentListBoxRCMenuStrip"
         Me.StudentListBoxRCMenuStrip.Size = New System.Drawing.Size(124, 76)
         '
+        'RefreshStuListBoxRCMenuStrip
+        '
+        Me.RefreshStuListBoxRCMenuStrip.Name = "RefreshStuListBoxRCMenuStrip"
+        Me.RefreshStuListBoxRCMenuStrip.Size = New System.Drawing.Size(123, 22)
+        Me.RefreshStuListBoxRCMenuStrip.Text = "Refresh"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(120, 6)
+        '
         'DeleteStuListBoxRCMenuStrip
         '
         Me.DeleteStuListBoxRCMenuStrip.Enabled = False
@@ -307,44 +319,40 @@ Partial Class LanSchoolClassListsHelper
         '
         'ClassListBoxRCMenuStrip
         '
-        Me.ClassListBoxRCMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RefreshClassListBoxRCMenuStrip, Me.ToolStripSeparator2, Me.ClassListBoxRCMenuDelete, Me.ClassListBoxRCMenuAdd})
+        Me.ClassListBoxRCMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RefreshClassListBoxRCMenuStrip, Me.ToolStripSeparator2, Me.ClassListBoxRCMenuDelete, Me.ClassListBoxRCMenuAdd, Me.AddTeacherToClassToolStripMenuItem})
         Me.ClassListBoxRCMenuStrip.Name = "ClassListBoxRCMenuStrip"
-        Me.ClassListBoxRCMenuStrip.Size = New System.Drawing.Size(124, 76)
-        '
-        'ClassListBoxRCMenuDelete
-        '
-        Me.ClassListBoxRCMenuDelete.Enabled = False
-        Me.ClassListBoxRCMenuDelete.Name = "ClassListBoxRCMenuDelete"
-        Me.ClassListBoxRCMenuDelete.Size = New System.Drawing.Size(152, 22)
-        Me.ClassListBoxRCMenuDelete.Text = "Delete"
-        '
-        'ClassListBoxRCMenuAdd
-        '
-        Me.ClassListBoxRCMenuAdd.Name = "ClassListBoxRCMenuAdd"
-        Me.ClassListBoxRCMenuAdd.Size = New System.Drawing.Size(152, 22)
-        Me.ClassListBoxRCMenuAdd.Text = "Add New"
-        '
-        'RefreshStuListBoxRCMenuStrip
-        '
-        Me.RefreshStuListBoxRCMenuStrip.Name = "RefreshStuListBoxRCMenuStrip"
-        Me.RefreshStuListBoxRCMenuStrip.Size = New System.Drawing.Size(123, 22)
-        Me.RefreshStuListBoxRCMenuStrip.Text = "Refresh"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(120, 6)
+        Me.ClassListBoxRCMenuStrip.Size = New System.Drawing.Size(185, 120)
         '
         'RefreshClassListBoxRCMenuStrip
         '
         Me.RefreshClassListBoxRCMenuStrip.Name = "RefreshClassListBoxRCMenuStrip"
-        Me.RefreshClassListBoxRCMenuStrip.Size = New System.Drawing.Size(152, 22)
+        Me.RefreshClassListBoxRCMenuStrip.Size = New System.Drawing.Size(184, 22)
         Me.RefreshClassListBoxRCMenuStrip.Text = "Refresh"
         '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(181, 6)
+        '
+        'ClassListBoxRCMenuDelete
+        '
+        Me.ClassListBoxRCMenuDelete.Enabled = False
+        Me.ClassListBoxRCMenuDelete.Name = "ClassListBoxRCMenuDelete"
+        Me.ClassListBoxRCMenuDelete.Size = New System.Drawing.Size(184, 22)
+        Me.ClassListBoxRCMenuDelete.Text = "Delete"
+        '
+        'ClassListBoxRCMenuAdd
+        '
+        Me.ClassListBoxRCMenuAdd.Name = "ClassListBoxRCMenuAdd"
+        Me.ClassListBoxRCMenuAdd.Size = New System.Drawing.Size(184, 22)
+        Me.ClassListBoxRCMenuAdd.Text = "Add New"
+        '
+        'AddTeacherToClassToolStripMenuItem
+        '
+        Me.AddTeacherToClassToolStripMenuItem.Enabled = False
+        Me.AddTeacherToClassToolStripMenuItem.Name = "AddTeacherToClassToolStripMenuItem"
+        Me.AddTeacherToClassToolStripMenuItem.Size = New System.Drawing.Size(184, 22)
+        Me.AddTeacherToClassToolStripMenuItem.Text = "Add Teacher to Class"
         '
         'LanSchoolClassListsHelper
         '
@@ -418,4 +426,5 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents RefreshClassListBoxRCMenuStrip As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+    Friend WithEvents AddTeacherToClassToolStripMenuItem As ToolStripMenuItem
 End Class

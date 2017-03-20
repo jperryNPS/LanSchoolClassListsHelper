@@ -185,11 +185,11 @@ Public Class LanSchoolClassListsHelper
     Private Sub EvaluateClassList()
         Dim sQuery As String
         If LoginNameRadioButton.Checked Then
-            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherLoginName.csv] WHERE TeacherLoginName='" & LoginNameComboBox.Text & "' ORDER BY TeacherLoginName"
+            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherLoginName.csv] WHERE TeacherLoginName='" & LoginNameComboBox.Text & "' ORDER BY [Personalized Class Name]"
         ElseIf MachineNameRadioButton.Checked Then
-            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherMachineName.csv] WHERE TeacherMachineName='" & MachineNameComboBox.Text & "' ORDER BY TeacherMachineName"
+            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherMachineName.csv] WHERE TeacherMachineName='" & MachineNameComboBox.Text & "' ORDER BY [Personalized Class Name]"
         ElseIf ADNameRadioButton.Checked Then
-            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherADName.csv] WHERE TeacherADFullName='" & ADNameComboBox.Text & "' ORDER BY TeacherADFullName"
+            sQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherADName.csv] WHERE TeacherADFullName='" & ADNameComboBox.Text & "' ORDER BY [Personalized Class Name]"
         Else
             Exit Sub
         End If
@@ -277,16 +277,16 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub StudentListBox_MouseDown(sender As Object, e As EventArgs) Handles StudentListBox.MouseDown
         Dim mousee = DirectCast(e, MouseEventArgs)
+        StudentListBox.SelectedIndex = StudentListBox.IndexFromPoint(mousee.X, mousee.Y)
         If mousee.Button = MouseButtons.Right Then
-            StudentListBox.SelectedIndex = StudentListBox.IndexFromPoint(mousee.X, mousee.Y)
             StudentListBoxRCMenuStrip.Show(MousePosition)
         End If
     End Sub
 
     Private Sub ClassNameListBox_MouseDown(sender As Object, e As EventArgs) Handles ClassNameListBox.MouseDown
         Dim mousee = DirectCast(e, MouseEventArgs)
+        ClassNameListBox.SelectedIndex = ClassNameListBox.IndexFromPoint(mousee.X, mousee.Y)
         If mousee.Button = MouseButtons.Right Then
-            ClassNameListBox.SelectedIndex = ClassNameListBox.IndexFromPoint(mousee.X, mousee.Y)
             ClassListBoxRCMenuStrip.Show(MousePosition)
         End If
     End Sub
@@ -304,11 +304,13 @@ Public Class LanSchoolClassListsHelper
     Private Sub ClassListBoxRCMenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ClassListBoxRCMenuStrip.Opening
         If ClassNameListBox.SelectedIndex >= 0 Then
             ClassListBoxRCMenuDelete.Enabled = True
+            AddTeacherToClassToolStripMenuItem.Enabled = True
         End If
     End Sub
 
     Private Sub ClassListBoxRCMenuStrip_Closing(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ClassListBoxRCMenuStrip.Closing
         ClassListBoxRCMenuDelete.Enabled = False
+        AddTeacherToClassToolStripMenuItem.Enabled = False
     End Sub
 
     Private Sub DeleteStudentFromClass()
@@ -477,6 +479,8 @@ Public Class LanSchoolClassListsHelper
         AddNewUserOrClassForm.UniqueIDComboBox.ValueMember = "UniqueClassIdentifier"
 
         AddNewUserOrClassForm.TeacherNameTextBox.Enabled = False
+        AddNewUserOrClassForm.UniqueIDComboBox.Enabled = True
+        AddNewUserOrClassForm.PersonalizedNameTextBox.Enabled = True
         AddNewUserOrClassForm.TeacherNameLabel.Text = strTeacherName
 
         Dim addNewResult As New DialogResult
@@ -509,6 +513,72 @@ Public Class LanSchoolClassListsHelper
         EvaluateClassList()
     End Sub
 
+    Private Sub AddTeacherToClass()
+        AddNewUserOrClassForm.TeacherNameTextBox.Clear()
+        AddNewUserOrClassForm.UniqueIDComboBox.Text = ""
+        AddNewUserOrClassForm.PersonalizedNameTextBox.Clear()
+
+        Dim strTeacherName As String
+        Dim filename As String
+
+        If LoginNameRadioButton.Checked Then
+            strTeacherName = "Teacher Login Name"
+            filename = folderName & "\ClassesByTeacherLoginName.csv"
+        ElseIf MachineNameRadioButton.Checked Then
+            strTeacherName = "Teacher Machine Name"
+            filename = folderName & "\ClassesByTeacherMachineName.csv"
+        ElseIf ADNameRadioButton.Checked Then
+            strTeacherName = "Teacher AD Name"
+            filename = folderName & "\ClassesByTeacherADName.csv"
+        Else
+            Exit Sub
+        End If
+
+        AddNewUserOrClassForm.UniqueIDComboBox.Text = ClassNameListBox.SelectedValue.ToString
+        AddNewUserOrClassForm.TeacherNameTextBox.Enabled = True
+        AddNewUserOrClassForm.UniqueIDComboBox.Enabled = False
+        AddNewUserOrClassForm.PersonalizedNameTextBox.Enabled = True
+        AddNewUserOrClassForm.TeacherNameLabel.Text = strTeacherName
+
+        Dim addNewResult As New DialogResult
+        Dim retryDialog As New DialogResult
+
+        addNewResult = AddNewUserOrClassForm.ShowDialog()
+
+        If addNewResult = DialogResult.Cancel Then
+            Exit Sub
+        End If
+
+        While AddNewUserOrClassForm.TeacherNameTextBox.Text = "" Or AddNewUserOrClassForm.PersonalizedNameTextBox.Text = ""
+            retryDialog = MsgBox("You must specify both a " & strTeacherName & " and a Personalized Name.", MessageBoxButtons.RetryCancel)
+            If retryDialog = DialogResult.Cancel Then
+                Exit Sub
+            ElseIf retryDialog = DialogResult.Retry Then
+                addNewResult = AddNewUserOrClassForm.ShowDialog()
+                If addNewResult = DialogResult.Cancel Then
+                    Exit Sub
+                End If
+            End If
+        End While
+
+        Dim newLine As String = AddNewUserOrClassForm.TeacherNameTextBox.Text & "," & AddNewUserOrClassForm.UniqueIDComboBox.Text & "," & AddNewUserOrClassForm.PersonalizedNameTextBox.Text
+
+        Dim objWriter As New System.IO.StreamWriter(filename, True)
+        objWriter.WriteLine(newLine)
+        objWriter.Close()
+
+        LoadCSVData()
+
+        If LoginNameRadioButton.Checked Then
+            LoginNameComboBox.Text = AddNewUserOrClassForm.TeacherNameTextBox.Text
+        ElseIf MachineNameRadioButton.Checked Then
+            MachineNameComboBox.Text = AddNewUserOrClassForm.TeacherNameTextBox.Text
+        ElseIf ADNameRadioButton.Checked Then
+            ADNameComboBox.Text = AddNewUserOrClassForm.TeacherNameTextBox.Text
+        End If
+
+    End Sub
+
     Private Sub AddNewTeacher()
 
         AddNewUserOrClassForm.TeacherNameTextBox.Clear()
@@ -535,6 +605,9 @@ Public Class LanSchoolClassListsHelper
             Exit Sub
         End If
 
+        AddNewUserOrClassForm.TeacherNameTextBox.Enabled = True
+        AddNewUserOrClassForm.UniqueIDComboBox.Enabled = True
+        AddNewUserOrClassForm.PersonalizedNameTextBox.Enabled = True
         AddNewUserOrClassForm.ClassList.Clear()
 
         Using adapt As New OleDbDataAdapter(sQuery, sConn)
@@ -612,5 +685,9 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub ADNameAddNewButton_Click(sender As Object, e As EventArgs) Handles ADNameAddNewButton.Click
         AddNewTeacher()
+    End Sub
+
+    Private Sub AddTeacherToClassToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddTeacherToClassToolStripMenuItem.Click
+        AddTeacherToClass()
     End Sub
 End Class
