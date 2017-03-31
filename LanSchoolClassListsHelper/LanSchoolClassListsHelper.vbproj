@@ -93,10 +93,10 @@
     <Compile Include="AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="AddNewUserOrClassForm.Designer.vb">
+      <DependentUpon>AddNewUserOrClassForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form1.vb">
+    <Compile Include="AddNewUserOrClassForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LanSchoolClassListsHelper.vb">
@@ -126,8 +126,8 @@
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="AddNewUserOrClassForm.resx">
+      <DependentUpon>AddNewUserOrClassForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LanSchoolClassListsHelper.resx">
       <DependentUpon>LanSchoolClassListsHelper.vb</DependentUpon>

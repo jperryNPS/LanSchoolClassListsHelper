@@ -24,12 +24,12 @@ Partial Class AddNewUserOrClassForm
     Private Sub InitializeComponent()
         Me.OKButton = New System.Windows.Forms.Button()
         Me.CancelButton1 = New System.Windows.Forms.Button()
-        Me.TeacherNameLabel = New System.Windows.Forms.Label()
+        Me.labelTeacherNamePrompt = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.UniqueIDComboBox = New System.Windows.Forms.ComboBox()
+        Me.comboUniqueClassID = New System.Windows.Forms.ComboBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.PersonalizedNameTextBox = New System.Windows.Forms.TextBox()
-        Me.TeacherNameTextBox = New System.Windows.Forms.TextBox()
+        Me.textboxPersonalizedName = New System.Windows.Forms.TextBox()
+        Me.textboxTeacherName = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
         'OKButton
@@ -54,12 +54,12 @@ Partial Class AddNewUserOrClassForm
         '
         'TeacherNameLabel
         '
-        Me.TeacherNameLabel.AutoSize = True
-        Me.TeacherNameLabel.Location = New System.Drawing.Point(12, 15)
-        Me.TeacherNameLabel.Name = "TeacherNameLabel"
-        Me.TeacherNameLabel.Size = New System.Drawing.Size(122, 13)
-        Me.TeacherNameLabel.TabIndex = 0
-        Me.TeacherNameLabel.Text = "Teacher Machine Name"
+        Me.labelTeacherNamePrompt.AutoSize = True
+        Me.labelTeacherNamePrompt.Location = New System.Drawing.Point(12, 15)
+        Me.labelTeacherNamePrompt.Name = "TeacherNameLabel"
+        Me.labelTeacherNamePrompt.Size = New System.Drawing.Size(122, 13)
+        Me.labelTeacherNamePrompt.TabIndex = 0
+        Me.labelTeacherNamePrompt.Text = "Teacher Machine Name"
         '
         'Label2
         '
@@ -72,11 +72,11 @@ Partial Class AddNewUserOrClassForm
         '
         'UniqueIDComboBox
         '
-        Me.UniqueIDComboBox.FormattingEnabled = True
-        Me.UniqueIDComboBox.Location = New System.Drawing.Point(144, 46)
-        Me.UniqueIDComboBox.Name = "UniqueIDComboBox"
-        Me.UniqueIDComboBox.Size = New System.Drawing.Size(146, 21)
-        Me.UniqueIDComboBox.TabIndex = 3
+        Me.comboUniqueClassID.FormattingEnabled = True
+        Me.comboUniqueClassID.Location = New System.Drawing.Point(144, 46)
+        Me.comboUniqueClassID.Name = "UniqueIDComboBox"
+        Me.comboUniqueClassID.Size = New System.Drawing.Size(146, 21)
+        Me.comboUniqueClassID.TabIndex = 3
         '
         'Label3
         '
@@ -89,17 +89,17 @@ Partial Class AddNewUserOrClassForm
         '
         'PersonalizedNameTextBox
         '
-        Me.PersonalizedNameTextBox.Location = New System.Drawing.Point(144, 80)
-        Me.PersonalizedNameTextBox.Name = "PersonalizedNameTextBox"
-        Me.PersonalizedNameTextBox.Size = New System.Drawing.Size(146, 20)
-        Me.PersonalizedNameTextBox.TabIndex = 5
+        Me.textboxPersonalizedName.Location = New System.Drawing.Point(144, 80)
+        Me.textboxPersonalizedName.Name = "PersonalizedNameTextBox"
+        Me.textboxPersonalizedName.Size = New System.Drawing.Size(146, 20)
+        Me.textboxPersonalizedName.TabIndex = 5
         '
         'TeacherNameTextBox
         '
-        Me.TeacherNameTextBox.Location = New System.Drawing.Point(144, 12)
-        Me.TeacherNameTextBox.Name = "TeacherNameTextBox"
-        Me.TeacherNameTextBox.Size = New System.Drawing.Size(146, 20)
-        Me.TeacherNameTextBox.TabIndex = 8
+        Me.textboxTeacherName.Location = New System.Drawing.Point(144, 12)
+        Me.textboxTeacherName.Name = "TeacherNameTextBox"
+        Me.textboxTeacherName.Size = New System.Drawing.Size(146, 20)
+        Me.textboxTeacherName.TabIndex = 8
         '
         'AddNewUserOrClassForm
         '
@@ -107,12 +107,12 @@ Partial Class AddNewUserOrClassForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(302, 149)
-        Me.Controls.Add(Me.TeacherNameTextBox)
-        Me.Controls.Add(Me.PersonalizedNameTextBox)
+        Me.Controls.Add(Me.textboxTeacherName)
+        Me.Controls.Add(Me.textboxPersonalizedName)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.UniqueIDComboBox)
+        Me.Controls.Add(Me.comboUniqueClassID)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.TeacherNameLabel)
+        Me.Controls.Add(Me.labelTeacherNamePrompt)
         Me.Controls.Add(Me.CancelButton1)
         Me.Controls.Add(Me.OKButton)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -126,10 +126,10 @@ Partial Class AddNewUserOrClassForm
 
     Friend WithEvents OKButton As Button
     Friend WithEvents CancelButton1 As Button
-    Friend WithEvents TeacherNameLabel As Label
+    Friend WithEvents labelTeacherNamePrompt As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
-    Public WithEvents UniqueIDComboBox As ComboBox
-    Public WithEvents PersonalizedNameTextBox As TextBox
-    Friend WithEvents TeacherNameTextBox As TextBox
+    Public WithEvents comboUniqueClassID As ComboBox
+    Public WithEvents textboxPersonalizedName As TextBox
+    Friend WithEvents textboxTeacherName As TextBox
 End Class
