@@ -87,6 +87,13 @@ Public Class LanSchoolClassListsHelper
             comboADName.DisplayMember = "TeacherADFullName"
         End If
 
+        If radioLoginName.Enabled Then
+            radioLoginName.Checked = True
+        ElseIf radioMachineName.Enabled Then
+            radioMachineName.Checked = True
+        ElseIf radioADName.Enabled Then
+            radioADName.Checked = True
+        End If
     End Sub
 
     Private Sub EvaluateClassList()
