@@ -61,9 +61,7 @@ Public Class LanSchoolClassListsHelper
             tableTeacherLoginName.Clear()
 
             ' Fill the Login Name teacher list
-            Using adapt As New OleDbDataAdapter("SELECT DISTINCT TeacherLoginName FROM [ClassesByTeacherLoginName.csv]", strDBConnection)
-                adapt.Fill(tableTeacherLoginName)
-            End Using
+            FillTableUsingQuery("SELECT DISTINCT TeacherLoginName FROM [ClassesByTeacherLoginName.csv]", tableTeacherLoginName)
 
             comboLoginName.DataSource = New BindingSource(tableTeacherLoginName, Nothing)
             comboLoginName.DisplayMember = "TeacherLoginName"
@@ -73,9 +71,7 @@ Public Class LanSchoolClassListsHelper
             tableTeacherMachineName.Clear()
 
             ' Fill the Machine Name teacher list
-            Using adapt As New OleDbDataAdapter("SELECT DISTINCT TeacherMachineName FROM [ClassesByTeacherMachineName.csv]", strDBConnection)
-                adapt.Fill(tableTeacherMachineName)
-            End Using
+            FillTableUsingQuery("SELECT DISTINCT TeacherMachineName FROM [ClassesByTeacherMachineName.csv]", tableTeacherMachineName)
 
             comboMachineName.DataSource = New BindingSource(tableTeacherMachineName, Nothing)
             comboMachineName.DisplayMember = "TeacherMachineName"
@@ -85,9 +81,7 @@ Public Class LanSchoolClassListsHelper
             tableTeacherADName.Clear()
 
             ' Fill the AD Name teacher list
-            Using adapt As New OleDbDataAdapter("SELECT DISTINCT TeacherADFullName FROM [ClassesByTeacherADName.csv]", strDBConnection)
-                adapt.Fill(tableTeacherADName)
-            End Using
+            FillTableUsingQuery("SELECT DISTINCT TeacherADFullName FROM [ClassesByTeacherADName.csv]", tableTeacherADName)
 
             comboADName.DataSource = New BindingSource(tableTeacherADName, Nothing)
             comboADName.DisplayMember = "TeacherADFullName"
@@ -111,9 +105,7 @@ Public Class LanSchoolClassListsHelper
         tableClassesByTeacher.Clear() ' Clear classes if they are already loaded
 
         ' Load classes from CSV using OleDbAdapter
-        Using adapt As New OleDbDataAdapter(strQuery, strDBConnection)
-            adapt.Fill(tableClassesByTeacher)
-        End Using
+        FillTableUsingQuery(strQuery, tableClassesByTeacher)
 
         ' Set class listbox to show correct fields and return correct value
         listboxClassName.DataSource = tableClassesByTeacher
@@ -160,9 +152,7 @@ Public Class LanSchoolClassListsHelper
             tableStudentsByClass.Clear() ' Clear out any existing students
 
             ' Load students from CSV using OleDbAdapter
-            Using adapt As New OleDbDataAdapter(strQuery, strDBConnection)
-                adapt.Fill(tableStudentsByClass)
-            End Using
+            FillTableUsingQuery(strQuery, tableStudentsByClass)
 
             ' Set listbox to show correct fields and return correct value
             listboxStudents.DataSource = tableStudentsByClass
@@ -427,9 +417,7 @@ Public Class LanSchoolClassListsHelper
         tableClassesByType.Clear() ' Clear list of classes
 
         ' Load list of classes from CSV files
-        Using adapt As New OleDbDataAdapter(strQuery, strDBConnection)
-            adapt.Fill(tableClassesByType)
-        End Using
+        FillTableUsingQuery(strQuery, tableClassesByType)
 
         ' Set data source, display, and value members for combo box
         AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
@@ -570,9 +558,7 @@ Public Class LanSchoolClassListsHelper
         AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
         tableClassesByType.Clear()
 
-        Using adapt As New OleDbDataAdapter(strQuery, strDBConnection)
-            adapt.Fill(tableClassesByType)
-        End Using
+        FillTableUsingQuery(strQuery, tableClassesByType)
 
         AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
         AddNewUserOrClassForm.comboUniqueClassID.DisplayMember = "UniqueClassIdentifier"
@@ -624,24 +610,29 @@ Public Class LanSchoolClassListsHelper
         EvaluateClassList()
     End Sub
 
-    Private Sub AddNewLineToFile(strFN As String, strNL As String)
-        Dim objFileWriter As New System.IO.StreamWriter(strFN, True) ' Open file writer in append mode
-        objFileWriter.WriteLine(strNL) ' Write string to file
-        objFileWriter.Close()
+    Private Sub AddNewLineToFile(ByVal filename As String, ByVal newline As String)
+        Dim objFileWriter As New System.IO.StreamWriter(filename, True) ' Open file writer in append mode
+        objFileWriter.WriteLine(newline) ' Write string to file
+        objFileWriter.Close() ' Close the file
     End Sub
 
-    Private Sub DeleteLineFromFile(strFN As String, strLM As String)
+    Private Sub DeleteLineFromFile(ByVal filename As String, ByVal linematch As String)
         Dim sb As New System.Text.StringBuilder
-        For Each line As String In IO.File.ReadLines(strFN) ' Recurse through the file line by line
-            If Not (line.StartsWith(strLM)) Then
+        For Each line As String In IO.File.ReadLines(filename) ' Recurse through the file line by line
+            If Not (line.StartsWith(linematch)) Then
                 sb.AppendLine(line) ' Add line to string builder if it's not the line we wish to skip/delete
             End If
         Next
 
-        Dim strAmmendedFile As String = sb.ToString ' Write string builder to string
-
-        Dim objFileWriter As New System.IO.StreamWriter(strFN) ' Open file writer in overwrite mode
-        objFileWriter.Write(strAmmendedFile) ' Write string to file
-        objFileWriter.Close()
+        Dim objFileWriter As New System.IO.StreamWriter(filename) ' Open file writer in overwrite mode
+        objFileWriter.Write(sb.ToString) ' Write string to file
+        objFileWriter.Close() ' Close the file
     End Sub
+
+    Private Sub FillTableUsingQuery(ByVal query As String, ByRef table As DataTable)
+        Using adapt As New OleDbDataAdapter(query, strDBConnection)
+            adapt.Fill(table)
+        End Using
+    End Sub
+
 End Class

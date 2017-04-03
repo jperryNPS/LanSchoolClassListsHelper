@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class LanSchoolClassListsHelper
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,15 +20,9 @@ Partial Class LanSchoolClassListsHelper
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsitemExit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.radioLoginName = New System.Windows.Forms.RadioButton()
         Me.radioMachineName = New System.Windows.Forms.RadioButton()
         Me.radioADName = New System.Windows.Forms.RadioButton()
@@ -59,51 +53,17 @@ Partial Class LanSchoolClassListsHelper
         Me.rcitemDeleteClass = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcitemAddClass = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcitemAddTeacher = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuStrip1.SuspendLayout()
+        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsitemExit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'MenuStrip1
-        '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.HelpToolStripMenuItem})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(461, 24)
-        Me.MenuStrip1.TabIndex = 0
-        Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'FileToolStripMenuItem
-        '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem, Me.tsitemExit})
-        Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
-        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
-        Me.FileToolStripMenuItem.Text = "File"
-        '
-        'OpenToolStripMenuItem
-        '
-        Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
-        Me.OpenToolStripMenuItem.Text = "Open..."
-        '
-        'tsitemExit
-        '
-        Me.tsitemExit.Name = "tsitemExit"
-        Me.tsitemExit.Size = New System.Drawing.Size(112, 22)
-        Me.tsitemExit.Text = "Exit"
-        '
-        'HelpToolStripMenuItem
-        '
-        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemAbout})
-        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
-        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
-        Me.HelpToolStripMenuItem.Text = "Help"
-        '
-        'tsitemAbout
-        '
-        Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
-        Me.tsitemAbout.Text = "About"
         '
         'radioLoginName
         '
@@ -143,6 +103,8 @@ Partial Class LanSchoolClassListsHelper
         '
         'comboLoginName
         '
+        Me.comboLoginName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.comboLoginName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.comboLoginName.Enabled = False
         Me.comboLoginName.FormattingEnabled = True
         Me.comboLoginName.Location = New System.Drawing.Point(168, 66)
@@ -152,6 +114,8 @@ Partial Class LanSchoolClassListsHelper
         '
         'comboMachineName
         '
+        Me.comboMachineName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.comboMachineName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.comboMachineName.Enabled = False
         Me.comboMachineName.FormattingEnabled = True
         Me.comboMachineName.Location = New System.Drawing.Point(168, 102)
@@ -161,6 +125,8 @@ Partial Class LanSchoolClassListsHelper
         '
         'comboADName
         '
+        Me.comboADName.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.comboADName.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.comboADName.Enabled = False
         Me.comboADName.FormattingEnabled = True
         Me.comboADName.Location = New System.Drawing.Point(168, 138)
@@ -354,6 +320,52 @@ Partial Class LanSchoolClassListsHelper
         Me.rcitemAddTeacher.Size = New System.Drawing.Size(184, 22)
         Me.rcitemAddTeacher.Text = "Add Teacher to Class"
         '
+        'FileToolStripMenuItem
+        '
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem, Me.ToolStripSeparator3, Me.tsitemExit})
+        Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.FileToolStripMenuItem.Text = "File"
+        '
+        'OpenToolStripMenuItem
+        '
+        Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
+        Me.OpenToolStripMenuItem.Text = "Open..."
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(109, 6)
+        '
+        'tsitemExit
+        '
+        Me.tsitemExit.Name = "tsitemExit"
+        Me.tsitemExit.Size = New System.Drawing.Size(112, 22)
+        Me.tsitemExit.Text = "Exit"
+        '
+        'HelpToolStripMenuItem
+        '
+        Me.HelpToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemAbout})
+        Me.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem"
+        Me.HelpToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.HelpToolStripMenuItem.Text = "Help"
+        '
+        'tsitemAbout
+        '
+        Me.tsitemAbout.Name = "tsitemAbout"
+        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
+        Me.tsitemAbout.Text = "About"
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(461, 24)
+        Me.MenuStrip1.TabIndex = 0
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
         'LanSchoolClassListsHelper
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -382,21 +394,14 @@ Partial Class LanSchoolClassListsHelper
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "LanSchoolClassListsHelper"
         Me.Text = "LanSchool Class Lists Helper"
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
         Me.rcmenuStudentListBox.ResumeLayout(False)
         Me.rcmenuClassListBox.ResumeLayout(False)
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents FileToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents OpenToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents tsitemExit As ToolStripMenuItem
-    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents tsitemAbout As ToolStripMenuItem
     Friend WithEvents radioLoginName As RadioButton
     Friend WithEvents radioMachineName As RadioButton
     Friend WithEvents radioADName As RadioButton
@@ -427,4 +432,11 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents rcitemRefreshClasses As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents rcitemAddTeacher As ToolStripMenuItem
+    Friend WithEvents FileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OpenToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents tsitemExit As ToolStripMenuItem
+    Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsitemAbout As ToolStripMenuItem
+    Friend WithEvents MenuStrip1 As MenuStrip
 End Class
