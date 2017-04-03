@@ -308,7 +308,7 @@ Public Class LanSchoolClassListsHelper
             Exit Sub
         End If
 
-        DeleteLineFromFile(strFileName, strLineMatch)
+        DeleteLineFromFile(strFileName, strLineMatch, True)
 
         EvaluateStudentList() ' Reevaluate the class list to remove the student from the display
 
@@ -616,10 +616,10 @@ Public Class LanSchoolClassListsHelper
         objFileWriter.Close() ' Close the file
     End Sub
 
-    Private Sub DeleteLineFromFile(ByVal filename As String, ByVal linematch As String)
+    Private Sub DeleteLineFromFile(ByVal filename As String, ByVal linematch As String, Optional ByVal exactmatch As Boolean = False)
         Dim sb As New System.Text.StringBuilder
         For Each line As String In IO.File.ReadLines(filename) ' Recurse through the file line by line
-            If Not (line.StartsWith(linematch)) Then
+            If (exactmatch And Not line.Equals(linematch)) Or (Not exactmatch And Not line.StartsWith(linematch)) Then
                 sb.AppendLine(line) ' Add line to string builder if it's not the line we wish to skip/delete
             End If
         Next
