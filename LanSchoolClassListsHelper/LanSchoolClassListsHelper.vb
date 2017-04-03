@@ -318,20 +318,7 @@ Public Class LanSchoolClassListsHelper
             Exit Sub
         End If
 
-        ' Read the file to a local string
-        Dim sb As New System.Text.StringBuilder
-        For Each line As String In IO.File.ReadLines(strFileName)
-            If Not (line.StartsWith(strLineMatch)) Then ' Skip the line that matches the string we want to skip
-                sb.AppendLine(line)
-            End If
-        Next
-
-        Dim strAmmendedFile As String = sb.ToString ' Write string builder to a regular string
-
-        ' Write the string and overwrite the file
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName)
-        objFileWriter.Write(strAmmendedFile)
-        objFileWriter.Close()
+        DeleteLineFromFile(strFileName, strLineMatch)
 
         EvaluateStudentList() ' Reevaluate the class list to remove the student from the display
 
@@ -341,6 +328,7 @@ Public Class LanSchoolClassListsHelper
         Dim strFileName As String
         Dim strPrompt As String
 
+        ' Set file name and prompt based on radio button selection
         If radioLoginName.Checked Then
             strFileName = strFolderName & "\StudentsForClassByLoginName.csv"
             strPrompt = "Enter the student Login Name you wish to add:"
@@ -351,35 +339,37 @@ Public Class LanSchoolClassListsHelper
             strFileName = strFolderName & "\StudentsForClassByADName.csv"
             strPrompt = "Enter the student AD Name you wish to add:"
         Else
-            Exit Sub
+            Exit Sub ' Stop if no radio button selected
         End If
 
-        Dim strStudentName As String = InputBox(strPrompt, "Student Info")
+        Dim strStudentName As String = InputBox(strPrompt, "Student Info") ' Prompt for student name
 
         If strStudentName = "" Then
-            Exit Sub
+            Exit Sub ' Stop if no name added
         End If
 
+        ' Set new line text
         Dim strNewLine As String = listboxClassName.SelectedValue.ToString & "," & strStudentName
 
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName, True)
-        objFileWriter.WriteLine(strNewLine)
-        objFileWriter.Close()
+        ' Add new line to file
+        AddNewLineToFile(strFileName, strNewLine)
 
+        ' Reload the student list
         EvaluateStudentList()
 
     End Sub
 
     Private Sub DeleteClassFromTeacher(sender As Object, e As EventArgs) Handles rcitemDeleteClass.Click
 
+        ' Confirm deletion
         If MessageBox.Show("Are you sure you want to delete this class from this teacher?", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.No Then
-            Exit Sub
+            Exit Sub ' Stop if the answer is no
         End If
 
         Dim strFileName As String
         Dim strLineMatch As String
 
-
+        ' Set file name and match string by radio button
         If radioLoginName.Checked Then
             strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
             strLineMatch = comboLoginName.Text & "," & listboxClassName.SelectedValue.ToString
@@ -393,49 +383,40 @@ Public Class LanSchoolClassListsHelper
             Exit Sub
         End If
 
-        Dim sb As New System.Text.StringBuilder
-        For Each line As String In IO.File.ReadLines(strFileName)
-            If Not (line.StartsWith(strLineMatch)) Then
-                sb.AppendLine(line)
-            End If
-        Next
+        ' Delete the matching line from the file
+        DeleteLineFromFile(strFileName, strLineMatch)
 
-        Dim strAmmendedFile As String = sb.ToString
-
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName)
-        objFileWriter.Write(strAmmendedFile)
-        objFileWriter.Close()
-
-        EvaluateClassList()
+        EvaluateClassList() ' Reevaluate list of classes
 
         If tableClassesByTeacher.Rows.Count < 1 Then
-            LoadCSVData()
+            LoadCSVData() ' Reload teacher list if this teacher has no more classes
         End If
 
     End Sub
 
     Private Sub AddClassToTeacher(sender As Object, e As EventArgs) Handles buttonAddNewClass.Click, rcitemAddClass.Click
 
+        ' Clear any old values from form boxes
         AddNewUserOrClassForm.textboxTeacherName.Clear()
         AddNewUserOrClassForm.comboUniqueClassID.Text = ""
         AddNewUserOrClassForm.textboxPersonalizedName.Clear()
 
-        Dim strTeacherName As String
+        Dim strTeacherNamePrompt As String
         Dim strFileName As String
         Dim strQuery As String
 
         If radioLoginName.Checked Then
-            strTeacherName = "Teacher Login Name"
+            strTeacherNamePrompt = "Teacher Login Name"
             strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
             AddNewUserOrClassForm.textboxTeacherName.Text = comboLoginName.Text
             strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherLoginName.csv] WHERE NOT TeacherLoginName='" & comboLoginName.Text & "' ORDER BY UniqueClassIdentifier"
         ElseIf radioMachineName.Checked Then
-            strTeacherName = "Teacher Machine Name"
+            strTeacherNamePrompt = "Teacher Machine Name"
             strFileName = strFolderName & "\ClassesByTeacherMachineName.csv"
             AddNewUserOrClassForm.textboxTeacherName.Text = comboMachineName.Text
             strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherMachineName.csv] WHERE NOT TeacherMachineName='" & comboMachineName.Text & "' ORDER BY UniqueClassIdentifier"
         ElseIf radioADName.Checked Then
-            strTeacherName = "Teacher AD Name"
+            strTeacherNamePrompt = "Teacher AD Name"
             strFileName = strFolderName & "\ClassesByTeacherADName.csv"
             AddNewUserOrClassForm.textboxTeacherName.Text = comboADName.Text
             strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherADName.csv] WHERE NOT TeacherADFullName='" & comboADName.Text & "' ORDER BY UniqueClassIdentifier"
@@ -443,20 +424,27 @@ Public Class LanSchoolClassListsHelper
             Exit Sub
         End If
 
-        tableClassesByType.Clear()
+        tableClassesByType.Clear() ' Clear list of classes
 
+        ' Load list of classes from CSV files
         Using adapt As New OleDbDataAdapter(strQuery, strDBConnection)
             adapt.Fill(tableClassesByType)
         End Using
 
+        ' Set data source, display, and value members for combo box
         AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
         AddNewUserOrClassForm.comboUniqueClassID.DisplayMember = "UniqueClassIdentifier"
         AddNewUserOrClassForm.comboUniqueClassID.ValueMember = "UniqueClassIdentifier"
 
+        ' Do not allow changing the teacher name
         AddNewUserOrClassForm.textboxTeacherName.Enabled = False
+
+        ' Allow changing Class ID and Personalized Name
         AddNewUserOrClassForm.comboUniqueClassID.Enabled = True
         AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
-        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = strTeacherName
+
+        ' Set prompt for Teacher Name
+        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = strTeacherNamePrompt
 
         Dim resultAddNew As New DialogResult
         Dim resultRetry As New DialogResult
@@ -464,9 +452,10 @@ Public Class LanSchoolClassListsHelper
         resultAddNew = AddNewUserOrClassForm.ShowDialog()
 
         If resultAddNew = DialogResult.Cancel Then
-            Exit Sub
+            Exit Sub ' Stop if the pressed cancel
         End If
 
+        ' Keep retrying until all fields are filled out or cancel is pressed
         While AddNewUserOrClassForm.comboUniqueClassID.Text = "" Or AddNewUserOrClassForm.textboxPersonalizedName.Text = ""
             resultRetry = MsgBox("You must specify both a Unique Class Id and a Personalized Name.", MessageBoxButtons.RetryCancel)
             If resultRetry = DialogResult.Cancel Then
@@ -481,9 +470,7 @@ Public Class LanSchoolClassListsHelper
 
         Dim newLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName, True)
-        objFileWriter.WriteLine(newLine)
-        objFileWriter.Close()
+        AddNewLineToFile(strFileName, newLine)
 
         EvaluateClassList()
     End Sub
@@ -538,9 +525,7 @@ Public Class LanSchoolClassListsHelper
 
         Dim newLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName, True)
-        objFileWriter.WriteLine(newLine)
-        objFileWriter.Close()
+        AddNewLineToFile(strFileName, newLine)
 
         LoadCSVData()
 
@@ -616,12 +601,9 @@ Public Class LanSchoolClassListsHelper
             End If
         End While
 
-        Dim newLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
+        Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
-        Dim objFileWriter As New System.IO.StreamWriter(strFileName, True)
-        objFileWriter.WriteLine(newLine)
-        objFileWriter.Close()
-
+        AddNewLineToFile(strFileName, strNewLine)
         LoadCSVData()
 
         If radioLoginName.Checked Then
@@ -640,5 +622,26 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub rcitemRefreshClasses_Click(sender As Object, e As EventArgs) Handles rcitemRefreshClasses.Click
         EvaluateClassList()
+    End Sub
+
+    Private Sub AddNewLineToFile(strFN As String, strNL As String)
+        Dim objFileWriter As New System.IO.StreamWriter(strFN, True) ' Open file writer in append mode
+        objFileWriter.WriteLine(strNL) ' Write string to file
+        objFileWriter.Close()
+    End Sub
+
+    Private Sub DeleteLineFromFile(strFN As String, strLM As String)
+        Dim sb As New System.Text.StringBuilder
+        For Each line As String In IO.File.ReadLines(strFN) ' Recurse through the file line by line
+            If Not (line.StartsWith(strLM)) Then
+                sb.AppendLine(line) ' Add line to string builder if it's not the line we wish to skip/delete
+            End If
+        Next
+
+        Dim strAmmendedFile As String = sb.ToString ' Write string builder to string
+
+        Dim objFileWriter As New System.IO.StreamWriter(strFN) ' Open file writer in overwrite mode
+        objFileWriter.Write(strAmmendedFile) ' Write string to file
+        objFileWriter.Close()
     End Sub
 End Class
