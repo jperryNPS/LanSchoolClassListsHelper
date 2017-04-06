@@ -60,6 +60,10 @@ Partial Class LanSchoolClassListsHelper
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemAddLoginNameCSVFiles = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemAddMachineNameCSVFiles = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemAddADNameCSVFiles = New System.Windows.Forms.ToolStripMenuItem()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemHideEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemShowOnlyEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
@@ -364,12 +368,40 @@ Partial Class LanSchoolClassListsHelper
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(461, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'EditToolStripMenuItem
+        '
+        Me.EditToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemAddLoginNameCSVFiles, Me.tsitemAddMachineNameCSVFiles, Me.tsitemAddADNameCSVFiles})
+        Me.EditToolStripMenuItem.Name = "EditToolStripMenuItem"
+        Me.EditToolStripMenuItem.Size = New System.Drawing.Size(39, 20)
+        Me.EditToolStripMenuItem.Text = "Edit"
+        '
+        'tsitemAddLoginNameCSVFiles
+        '
+        Me.tsitemAddLoginNameCSVFiles.Enabled = False
+        Me.tsitemAddLoginNameCSVFiles.Name = "tsitemAddLoginNameCSVFiles"
+        Me.tsitemAddLoginNameCSVFiles.Size = New System.Drawing.Size(230, 22)
+        Me.tsitemAddLoginNameCSVFiles.Text = "Add Login Name CSV Files"
+        '
+        'tsitemAddMachineNameCSVFiles
+        '
+        Me.tsitemAddMachineNameCSVFiles.Enabled = False
+        Me.tsitemAddMachineNameCSVFiles.Name = "tsitemAddMachineNameCSVFiles"
+        Me.tsitemAddMachineNameCSVFiles.Size = New System.Drawing.Size(230, 22)
+        Me.tsitemAddMachineNameCSVFiles.Text = "Add Machine Name CSV Files"
+        '
+        'tsitemAddADNameCSVFiles
+        '
+        Me.tsitemAddADNameCSVFiles.Enabled = False
+        Me.tsitemAddADNameCSVFiles.Name = "tsitemAddADNameCSVFiles"
+        Me.tsitemAddADNameCSVFiles.Size = New System.Drawing.Size(230, 22)
+        Me.tsitemAddADNameCSVFiles.Text = "Add AD Name CSV Files"
         '
         'ViewToolStripMenuItem
         '
@@ -479,4 +511,8 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents tsitemShowOnlyEmptyClasses As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents tsitemShowAllClassesByType As ToolStripMenuItem
+    Friend WithEvents EditToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsitemAddLoginNameCSVFiles As ToolStripMenuItem
+    Friend WithEvents tsitemAddMachineNameCSVFiles As ToolStripMenuItem
+    Friend WithEvents tsitemAddADNameCSVFiles As ToolStripMenuItem
 End Class

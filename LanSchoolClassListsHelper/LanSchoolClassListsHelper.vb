@@ -28,6 +28,17 @@ Public Class LanSchoolClassListsHelper
     Private Sub LoadCSVData(Optional ByVal resetRadio As Boolean = False)
         textboxFolderPath.Text = strFolderName ' Populate location text box with the most recent location
 
+        If resetRadio Then
+            ' Uncheck all the radio buttons, in case the files do not exist in the new location
+            radioLoginName.Checked = False
+            radioMachineName.Checked = False
+            radioADName.Checked = False
+
+            comboLoginName.Text = ""
+            comboMachineName.Text = ""
+            comboADName.Text = ""
+        End If
+
         If (strFolderName <> "") Then ' Only continue if the folder exists
             buttonLoad.Enabled = True
 
@@ -57,6 +68,11 @@ Public Class LanSchoolClassListsHelper
                 buttonAddNewADName.Enabled = False
             End If
         End If
+
+        ' Set the option to add the CSV files to the opposite of the radio options
+        tsitemAddLoginNameCSVFiles.Enabled = Not radioLoginName.Enabled
+        tsitemAddMachineNameCSVFiles.Enabled = Not radioMachineName.Enabled
+        tsitemAddADNameCSVFiles.Enabled = Not radioADName.Enabled
 
         If (radioLoginName.Enabled Or radioMachineName.Enabled Or radioADName.Enabled) Then ' Only change the DB Connection if any of the CSV Files exist
             buttonLoad.Text = "Reload"
@@ -207,6 +223,7 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub buttonLoad_Click(sender As Object, e As EventArgs) Handles buttonLoad.Click
         strFolderName = textboxFolderPath.Text ' Set folder name to textbox content
+
 
         LoadCSVData(True) ' Load the information for the CSV files
     End Sub
@@ -501,6 +518,16 @@ Public Class LanSchoolClassListsHelper
         ' Set prompt for Teacher Name
         AddNewUserOrClassForm.labelTeacherNamePrompt.Text = "Teacher " & strNamePrompt
 
+        ' Always enable teacher name input if no teacher is selected
+        If strSelectedTeacher = "" Then
+            boolTeacherNameEnabled = True
+        End If
+
+        ' Always enable unique class id selection if no class is selected
+        If listboxClassName.SelectedItems.Count <= 0 Then
+            boolUniqueClassIDEnabled = True
+        End If
+
         If Not boolTeacherNameEnabled Then
             AddNewUserOrClassForm.textboxTeacherName.Text = strSelectedTeacher
         End If
@@ -607,4 +634,23 @@ Public Class LanSchoolClassListsHelper
 
         EvaluateClassList()
     End Sub
+
+    Private Sub tsitemAddLoginNameCSVFiles_Click(sender As Object, e As EventArgs) Handles tsitemAddLoginNameCSVFiles.Click
+        AddNewLineToFile(strFolderName + "\ClassesByTeacherLoginName.csv", "TeacherLoginName,UniqueClassIdentifier,Personalized Class Name")
+        AddNewLineToFile(strFolderName + "\StudentsForClassByLoginName.csv", "UniqueClassIdentifier,StudentLoginName")
+        LoadCSVData()
+    End Sub
+
+    Private Sub tsitemAddMachineNameCSVFiles_Click(sender As Object, e As EventArgs) Handles tsitemAddMachineNameCSVFiles.Click
+        AddNewLineToFile(strFolderName + "\ClassesByTeacherMachineName.csv", "TeacherMachineName,UniqueClassIdentifier,Personalized Class Name")
+        AddNewLineToFile(strFolderName + "\StudentsForClassByMachineName.csv", "UniqueClassIdentifier,StudentMachineName")
+        LoadCSVData()
+    End Sub
+
+    Private Sub tsitemAddADNameCSVFiles_Click(sender As Object, e As EventArgs) Handles tsitemAddADNameCSVFiles.Click
+        AddNewLineToFile(strFolderName + "\ClassesByTeacherADName.csv", "TeacherADFullName,UniqueClassIdentifier,Personalized Class Name")
+        AddNewLineToFile(strFolderName + "\StudentsForClassByADName.csv", "UniqueClassIdentifier,StudentADFullName")
+        LoadCSVData()
+    End Sub
+
 End Class
