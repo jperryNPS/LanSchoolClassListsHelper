@@ -259,6 +259,7 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub comboTeacherName_SelectedValueChanged(sender As Object, e As EventArgs) Handles comboLoginName.SelectedValueChanged, comboMachineName.SelectedValueChanged, comboADName.SelectedValueChanged
         If (radioLoginName.Checked = True Or radioMachineName.Checked = True Or radioADName.Checked = True) Then
+            ' Set selected teacher based on selected radio button
             Select Case sender.Name
                 Case "comboLoginName"
                     strSelectedTeacher = comboLoginName.Text
@@ -366,31 +367,34 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub AddClassToTeacher(sender As Object, e As EventArgs) Handles buttonAddNewClass.Click, rcitemAddClass.Click
 
+        ' Show add class dialog with teacher name locked
         If Not ShowAddClassDialog(False, True) Then
             Exit Sub
         End If
 
+        ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
-
         AddNewLineToFile(strFileName, strNewLine)
 
-        EvaluateClassList()
+        EvaluateClassList() ' Update the list of classes, no need to update list of teachers, as it was locked
     End Sub
 
     Private Sub AddTeacherToClass(sender As Object, e As EventArgs) Handles rcitemAddTeacher.Click
 
+        ' Show add class dialog with class unique id locked
         If Not ShowAddClassDialog(True, False) Then
             Exit Sub
         End If
 
+        ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
-
         AddNewLineToFile(strFileName, strNewLine)
 
-        LoadCSVData()
+        LoadCSVData() ' Reload the list of teachers
 
+        ' Select the teacher you just added
         If radioLoginName.Checked Then
             comboLoginName.Text = AddNewUserOrClassForm.textboxTeacherName.Text
         ElseIf radioMachineName.Checked Then
@@ -403,16 +407,19 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub AddNewTeacher(sender As Object, e As EventArgs) Handles buttonAddNewLoginName.Click, buttonAddNewMachineName.Click, buttonAddNewADName.Click
 
+        ' Show completely unlocked add class dialog
         If Not ShowAddClassDialog(True, True) Then
             Exit Sub
         End If
 
+        ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
-
         AddNewLineToFile(strFileName, strNewLine)
-        LoadCSVData()
 
+        LoadCSVData() ' Reload the list of teachers
+
+        ' Select the teacher you just added
         If radioLoginName.Checked Then
             comboLoginName.Text = AddNewUserOrClassForm.textboxTeacherName.Text
         ElseIf radioMachineName.Checked Then
@@ -424,11 +431,11 @@ Public Class LanSchoolClassListsHelper
     End Sub
 
     Private Sub rcitemRefreshStudents_Click(sender As Object, e As EventArgs) Handles rcitemRefreshStudents.Click
-        EvaluateStudentList()
+        EvaluateStudentList() ' Refresh list of students
     End Sub
 
     Private Sub rcitemRefreshClasses_Click(sender As Object, e As EventArgs) Handles rcitemRefreshClasses.Click
-        EvaluateClassList()
+        EvaluateClassList() ' Refresh list of classes
     End Sub
 
     Private Sub AddNewLineToFile(ByVal filename As String, ByVal newline As String)
@@ -495,7 +502,7 @@ Public Class LanSchoolClassListsHelper
         Dim resultAddNew As New DialogResult
         Dim resultRetry As New DialogResult
 
-        Do
+        Do ' Locks in loop until cancel is pressed or all fields are filled
             resultAddNew = AddNewUserOrClassForm.ShowDialog()
 
             If resultAddNew = DialogResult.Cancel Then
