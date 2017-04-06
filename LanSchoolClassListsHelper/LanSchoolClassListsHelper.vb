@@ -103,7 +103,13 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub EvaluateClassList()
 
-        Dim strQuery As String = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "] WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "' ORDER BY [Personalized Class Name]"
+        Dim strQuery As String = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "] WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "'"
+
+        If tsitemHideEmptyClasses.Checked Then
+            strQuery &= " AND [UniqueClassIdentifier] IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
+        End If
+
+        strQuery &= " ORDER BY [Personalized Class Name]"
 
         ' Load classes from CSV using OleDbAdapter
         FillTableUsingQuery(strQuery, tableClassesByTeacher)
@@ -526,4 +532,17 @@ Public Class LanSchoolClassListsHelper
 
     End Function
 
+    Private Sub tsitemHideEmptyClasses_Click(sender As Object, e As EventArgs) Handles tsitemHideEmptyClasses.Click
+        tsitemHideEmptyClasses.Checked = Not tsitemHideEmptyClasses.Checked ' Change whether item is checked
+
+        If tsitemHideEmptyClasses.Checked Then ' Warn about repurcussions and confirm
+            If MsgBox("Enabling this option will hide all empty classes, even newly created ones.", MessageBoxButtons.OKCancel) = DialogResult.Cancel Then
+                tsitemHideEmptyClasses.Checked = False
+                Exit Sub
+            End If
+        End If
+
+        EvaluateClassList()
+
+    End Sub
 End Class

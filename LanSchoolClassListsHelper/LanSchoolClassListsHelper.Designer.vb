@@ -60,6 +60,8 @@ Partial Class LanSchoolClassListsHelper
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemHideEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -330,18 +332,18 @@ Partial Class LanSchoolClassListsHelper
         'OpenToolStripMenuItem
         '
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
         Me.OpenToolStripMenuItem.Text = "Open..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(109, 6)
         '
         'tsitemExit
         '
         Me.tsitemExit.Name = "tsitemExit"
-        Me.tsitemExit.Size = New System.Drawing.Size(152, 22)
+        Me.tsitemExit.Size = New System.Drawing.Size(112, 22)
         Me.tsitemExit.Text = "Exit"
         '
         'HelpToolStripMenuItem
@@ -354,17 +356,30 @@ Partial Class LanSchoolClassListsHelper
         'tsitemAbout
         '
         Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
+        Me.tsitemAbout.Size = New System.Drawing.Size(152, 22)
         Me.tsitemAbout.Text = "About"
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(461, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'ViewToolStripMenuItem
+        '
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses})
+        Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
+        Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
+        Me.ViewToolStripMenuItem.Text = "View"
+        '
+        'tsitemHideEmptyClasses
+        '
+        Me.tsitemHideEmptyClasses.Name = "tsitemHideEmptyClasses"
+        Me.tsitemHideEmptyClasses.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemHideEmptyClasses.Text = "Hide empty classes"
         '
         'LanSchoolClassListsHelper
         '
@@ -439,4 +454,6 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsitemAbout As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsitemHideEmptyClasses As ToolStripMenuItem
 End Class
