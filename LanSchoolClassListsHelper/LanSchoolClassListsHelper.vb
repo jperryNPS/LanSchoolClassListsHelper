@@ -6,6 +6,12 @@ Public Class LanSchoolClassListsHelper
 
     Private strFolderName As String = My.Application.Info.DirectoryPath ' Set the default folder to the current directory
     Private strDBConnection As String
+    Private strClassesByTeacherCSV As String
+    Private strStudentsForClassCSV As String
+    Private strNamePrompt As String
+    Private strTeacherNameField As String
+    Private strStudentNameField As String
+    Private strSelectedTeacher As String
 
     ' Create the Data Tables for storing the teacher lists
     Private tableTeacherLoginName As New DataTable()
@@ -16,8 +22,10 @@ Public Class LanSchoolClassListsHelper
     Private tableClassesByTeacher As New DataTable()
     Private tableStudentsByClass As New DataTable()
     Private tableClassesByType As New DataTable()
+    Private tableClassesWithStudentsByType As New DataTable()
+    Private tableClassesWithoutTeachersByType As New DataTable()
 
-    Private Sub LoadCSVData()
+    Private Sub LoadCSVData(Optional ByVal resetRadio As Boolean = False)
         textboxFolderPath.Text = strFolderName ' Populate location text box with the most recent location
 
         If (strFolderName <> "") Then ' Only continue if the folder exists
@@ -58,8 +66,6 @@ Public Class LanSchoolClassListsHelper
         End If
 
         If (radioLoginName.Enabled) Then
-            tableTeacherLoginName.Clear()
-
             ' Fill the Login Name teacher list
             FillTableUsingQuery("SELECT DISTINCT TeacherLoginName FROM [ClassesByTeacherLoginName.csv]", tableTeacherLoginName)
 
@@ -68,8 +74,6 @@ Public Class LanSchoolClassListsHelper
         End If
 
         If (radioMachineName.Enabled) Then
-            tableTeacherMachineName.Clear()
-
             ' Fill the Machine Name teacher list
             FillTableUsingQuery("SELECT DISTINCT TeacherMachineName FROM [ClassesByTeacherMachineName.csv]", tableTeacherMachineName)
 
@@ -78,8 +82,6 @@ Public Class LanSchoolClassListsHelper
         End If
 
         If (radioADName.Enabled) Then
-            tableTeacherADName.Clear()
-
             ' Fill the AD Name teacher list
             FillTableUsingQuery("SELECT DISTINCT TeacherADFullName FROM [ClassesByTeacherADName.csv]", tableTeacherADName)
 
@@ -87,29 +89,21 @@ Public Class LanSchoolClassListsHelper
             comboADName.DisplayMember = "TeacherADFullName"
         End If
 
-        If radioLoginName.Enabled Then
-            radioLoginName.Checked = True
-        ElseIf radioMachineName.Enabled Then
-            radioMachineName.Checked = True
-        ElseIf radioADName.Enabled Then
-            radioADName.Checked = True
+        If resetRadio Then
+            ' Check the first available radio button
+            If radioLoginName.Enabled Then
+                radioLoginName.Checked = True
+            ElseIf radioMachineName.Enabled Then
+                radioMachineName.Checked = True
+            ElseIf radioADName.Enabled Then
+                radioADName.Checked = True
+            End If
         End If
     End Sub
 
     Private Sub EvaluateClassList()
 
-        Dim strQuery As String ' Set Query string based on what radio button is selected
-        If radioLoginName.Checked Then
-            strQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherLoginName.csv] WHERE TeacherLoginName='" & comboLoginName.Text & "' ORDER BY [Personalized Class Name]"
-        ElseIf radioMachineName.Checked Then
-            strQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherMachineName.csv] WHERE TeacherMachineName='" & comboMachineName.Text & "' ORDER BY [Personalized Class Name]"
-        ElseIf radioADName.Checked Then
-            strQuery = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [ClassesByTeacherADName.csv] WHERE TeacherADFullName='" & comboADName.Text & "' ORDER BY [Personalized Class Name]"
-        Else
-            Exit Sub ' Can not evaluate class list if no radio button selected
-        End If
-
-        tableClassesByTeacher.Clear() ' Clear classes if they are already loaded
+        Dim strQuery As String = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "] WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "' ORDER BY [Personalized Class Name]"
 
         ' Load classes from CSV using OleDbAdapter
         FillTableUsingQuery(strQuery, tableClassesByTeacher)
@@ -144,19 +138,7 @@ Public Class LanSchoolClassListsHelper
             listboxStudents.Enabled = True
             buttonAddNewStudent.Enabled = True
 
-            Dim strQuery As String
-
-            If radioLoginName.Checked Then ' Set Query string based on what radio button is selected
-                strQuery = "SELECT DISTINCT [StudentLoginName] as StudentName FROM [StudentsForClassByLoginName.csv] WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "' ORDER BY StudentLoginName"
-            ElseIf radioMachineName.Checked Then
-                strQuery = "SELECT DISTINCT [StudentMachineName] as StudentName FROM [StudentsForClassByMachineName.csv] WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "' ORDER BY StudentMachineName"
-            ElseIf radioADName.Checked Then
-                strQuery = "SELECT DISTINCT [StudentADFullName] as StudentName FROM [StudentsForClassByADName.csv] WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "' ORDER BY StudentADFullName"
-            Else
-                Exit Sub ' Can not evaluate class list if no radio button is selected
-            End If
-
-            tableStudentsByClass.Clear() ' Clear out any existing students
+            Dim strQuery As String = "SELECT DISTINCT [" & strStudentNameField & "] As StudentName FROM [" & strStudentsForClassCSV & "] WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "' ORDER BY " & strStudentNameField
 
             ' Load students from CSV using OleDbAdapter
             FillTableUsingQuery(strQuery, tableStudentsByClass)
@@ -182,7 +164,7 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub FormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
         MaximizeBox = False
-        LoadCSVData() ' Load the information for the CSV files
+        LoadCSVData(True) ' Load the information for the CSV files
     End Sub
 
     Private Sub tsitemExit_Click(sender As Object, e As EventArgs) Handles tsitemExit.Click
@@ -201,7 +183,7 @@ Public Class LanSchoolClassListsHelper
 
         If (result = DialogResult.OK) Then ' Only continue to load if they click OK
             strFolderName = FolderBrowserDialog1.SelectedPath
-            LoadCSVData() ' Load the information for the CSV files
+            LoadCSVData(True) ' Load the information for the CSV files
         End If
 
     End Sub
@@ -209,23 +191,41 @@ Public Class LanSchoolClassListsHelper
     Private Sub buttonLoad_Click(sender As Object, e As EventArgs) Handles buttonLoad.Click
         strFolderName = textboxFolderPath.Text ' Set folder name to textbox content
 
-        LoadCSVData() ' Load the information for the CSV files
+        LoadCSVData(True) ' Load the information for the CSV files
     End Sub
 
     Private Sub radio_CheckedChanged(sender As Object, e As EventArgs) Handles radioLoginName.CheckedChanged, radioMachineName.CheckedChanged, radioADName.CheckedChanged
         ' Only change settings when the sender is checked
-        If sender.Checked = True Then
+        If sender.Checked Then
             ' Uncheck the radios that are not the sender
             Select Case sender.Name
                 Case "radioLoginName"
                     radioMachineName.Checked = False
                     radioADName.Checked = False
+                    strClassesByTeacherCSV = "ClassesByTeacherLoginName.csv"
+                    strStudentsForClassCSV = "StudentsForClassByLoginName.csv"
+                    strNamePrompt = "Login Name"
+                    strTeacherNameField = "TeacherLoginName"
+                    strStudentNameField = "StudentLoginName"
+                    strSelectedTeacher = comboLoginName.Text
                 Case "radioMachineName"
                     radioLoginName.Checked = False
                     radioADName.Checked = False
+                    strClassesByTeacherCSV = "ClassesByTeacherMachineName.csv"
+                    strStudentsForClassCSV = "StudentsForClassByMachineName.csv"
+                    strNamePrompt = "Machine Name"
+                    strTeacherNameField = "TeacherMachineName"
+                    strStudentNameField = "StudentMachineName"
+                    strSelectedTeacher = comboMachineName.Text
                 Case "radioADName"
                     radioLoginName.Checked = False
                     radioMachineName.Checked = False
+                    strClassesByTeacherCSV = "ClassesByTeacherADName.csv"
+                    strStudentsForClassCSV = "StudentsForClassByADName.csv"
+                    strNamePrompt = "AD Name"
+                    strTeacherNameField = "TeacherADFullName"
+                    strStudentNameField = "StudentADFullName"
+                    strSelectedTeacher = comboADName.Text
                 Case Else
                     Exit Sub
             End Select
@@ -259,6 +259,17 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub comboTeacherName_SelectedValueChanged(sender As Object, e As EventArgs) Handles comboLoginName.SelectedValueChanged, comboMachineName.SelectedValueChanged, comboADName.SelectedValueChanged
         If (radioLoginName.Checked = True Or radioMachineName.Checked = True Or radioADName.Checked = True) Then
+            Select Case sender.Name
+                Case "comboLoginName"
+                    strSelectedTeacher = comboLoginName.Text
+                Case "comboMachineName"
+                    strSelectedTeacher = comboMachineName.Text
+                Case "comboADName"
+                    strSelectedTeacher = comboADName.Text
+                Case Else
+                    Exit Sub
+            End Select
+
             EvaluateClassList() ' Evaluate the class list as long as a radio button is checked
         End If
     End Sub
@@ -301,19 +312,8 @@ Public Class LanSchoolClassListsHelper
             Exit Sub ' Don't continue if the user clicks no
         End If
 
-        Dim strFileName As String
+        Dim strFileName As String = strFolderName & "\" & strStudentsForClassCSV
         Dim strLineMatch As String = listboxClassName.SelectedValue.ToString & "," & listboxStudents.SelectedValue.ToString
-
-        ' Set the file name by currently selected radio button
-        If radioLoginName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByLoginName.csv"
-        ElseIf radioMachineName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByMachineName.csv"
-        ElseIf radioADName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByADName.csv"
-        Else
-            Exit Sub
-        End If
 
         DeleteLineFromFile(strFileName, strLineMatch, True)
 
@@ -322,22 +322,9 @@ Public Class LanSchoolClassListsHelper
     End Sub
 
     Private Sub AddStudentToClass(sender As Object, e As EventArgs) Handles rcitemAddStudent.Click, buttonAddNewStudent.Click
-        Dim strFileName As String
-        Dim strPrompt As String
 
-        ' Set file name and prompt based on radio button selection
-        If radioLoginName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByLoginName.csv"
-            strPrompt = "Enter the student Login Name you wish to add:"
-        ElseIf radioMachineName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByMachineName.csv"
-            strPrompt = "Enter the student Machine Name you wish to add:"
-        ElseIf radioADName.Checked Then
-            strFileName = strFolderName & "\StudentsForClassByADName.csv"
-            strPrompt = "Enter the student AD Name you wish to add:"
-        Else
-            Exit Sub ' Stop if no radio button selected
-        End If
+        Dim strFileName As String = strFolderName & "\" & strStudentsForClassCSV
+        Dim strPrompt As String = "Enter the student " & strNamePrompt & " you wish to add:"
 
         Dim strStudentName As String = InputBox(strPrompt, "Student Info") ' Prompt for student name
 
@@ -363,22 +350,8 @@ Public Class LanSchoolClassListsHelper
             Exit Sub ' Stop if the answer is no
         End If
 
-        Dim strFileName As String
-        Dim strLineMatch As String
-
-        ' Set file name and match string by radio button
-        If radioLoginName.Checked Then
-            strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
-            strLineMatch = comboLoginName.Text & "," & listboxClassName.SelectedValue.ToString
-        ElseIf radioMachineName.Checked Then
-            strFileName = strFolderName & "\ClassesByTeacherMachineName.csv"
-            strLineMatch = comboMachineName.Text & "," & listboxClassName.SelectedValue.ToString
-        ElseIf radioADName.Checked Then
-            strFileName = strFolderName & "\ClassesByTeacherADName.csv"
-            strLineMatch = comboADName.Text & "," & listboxClassName.SelectedValue.ToString
-        Else
-            Exit Sub
-        End If
+        Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
+        Dim strLineMatch As String = strSelectedTeacher & "," & listboxClassName.SelectedValue.ToString
 
         ' Delete the matching line from the file
         DeleteLineFromFile(strFileName, strLineMatch)
@@ -393,134 +366,28 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub AddClassToTeacher(sender As Object, e As EventArgs) Handles buttonAddNewClass.Click, rcitemAddClass.Click
 
-        ' Clear any old values from form boxes
-        AddNewUserOrClassForm.textboxTeacherName.Clear()
-        AddNewUserOrClassForm.comboUniqueClassID.Text = ""
-        AddNewUserOrClassForm.textboxPersonalizedName.Clear()
-
-        Dim strTeacherNamePrompt As String
-        Dim strFileName As String
-        Dim strQuery As String
-
-        If radioLoginName.Checked Then
-            strTeacherNamePrompt = "Teacher Login Name"
-            strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
-            AddNewUserOrClassForm.textboxTeacherName.Text = comboLoginName.Text
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherLoginName.csv] WHERE NOT TeacherLoginName='" & comboLoginName.Text & "' ORDER BY UniqueClassIdentifier"
-        ElseIf radioMachineName.Checked Then
-            strTeacherNamePrompt = "Teacher Machine Name"
-            strFileName = strFolderName & "\ClassesByTeacherMachineName.csv"
-            AddNewUserOrClassForm.textboxTeacherName.Text = comboMachineName.Text
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherMachineName.csv] WHERE NOT TeacherMachineName='" & comboMachineName.Text & "' ORDER BY UniqueClassIdentifier"
-        ElseIf radioADName.Checked Then
-            strTeacherNamePrompt = "Teacher AD Name"
-            strFileName = strFolderName & "\ClassesByTeacherADName.csv"
-            AddNewUserOrClassForm.textboxTeacherName.Text = comboADName.Text
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherADName.csv] WHERE NOT TeacherADFullName='" & comboADName.Text & "' ORDER BY UniqueClassIdentifier"
-        Else
+        If Not ShowAddClassDialog(False, True) Then
             Exit Sub
         End If
 
-        tableClassesByType.Clear() ' Clear list of classes
+        Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
+        Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
-        ' Load list of classes from CSV files
-        FillTableUsingQuery(strQuery, tableClassesByType)
-
-        ' Set data source, display, and value members for combo box
-        AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
-        AddNewUserOrClassForm.comboUniqueClassID.DisplayMember = "UniqueClassIdentifier"
-        AddNewUserOrClassForm.comboUniqueClassID.ValueMember = "UniqueClassIdentifier"
-
-        ' Do not allow changing the teacher name
-        AddNewUserOrClassForm.textboxTeacherName.Enabled = False
-
-        ' Allow changing Class ID and Personalized Name
-        AddNewUserOrClassForm.comboUniqueClassID.Enabled = True
-        AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
-
-        ' Set prompt for Teacher Name
-        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = strTeacherNamePrompt
-
-        Dim resultAddNew As New DialogResult
-        Dim resultRetry As New DialogResult
-
-        resultAddNew = AddNewUserOrClassForm.ShowDialog()
-
-        If resultAddNew = DialogResult.Cancel Then
-            Exit Sub ' Stop if the pressed cancel
-        End If
-
-        ' Keep retrying until all fields are filled out or cancel is pressed
-        While AddNewUserOrClassForm.comboUniqueClassID.Text = "" Or AddNewUserOrClassForm.textboxPersonalizedName.Text = ""
-            resultRetry = MsgBox("You must specify both a Unique Class Id and a Personalized Name.", MessageBoxButtons.RetryCancel)
-            If resultRetry = DialogResult.Cancel Then
-                Exit Sub
-            ElseIf resultRetry = DialogResult.Retry Then
-                resultAddNew = AddNewUserOrClassForm.ShowDialog()
-                If resultAddNew = DialogResult.Cancel Then
-                    Exit Sub
-                End If
-            End If
-        End While
-
-        Dim newLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
-
-        AddNewLineToFile(strFileName, newLine)
+        AddNewLineToFile(strFileName, strNewLine)
 
         EvaluateClassList()
     End Sub
 
     Private Sub AddTeacherToClass(sender As Object, e As EventArgs) Handles rcitemAddTeacher.Click
-        AddNewUserOrClassForm.textboxTeacherName.Clear()
-        AddNewUserOrClassForm.comboUniqueClassID.Text = ""
-        AddNewUserOrClassForm.textboxPersonalizedName.Clear()
 
-        Dim strTeacherName As String
-        Dim strFileName As String
-
-        If radioLoginName.Checked Then
-            strTeacherName = "Teacher Login Name"
-            strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
-        ElseIf radioMachineName.Checked Then
-            strTeacherName = "Teacher Machine Name"
-            strFileName = strFolderName & "\ClassesByTeacherMachineName.csv"
-        ElseIf radioADName.Checked Then
-            strTeacherName = "Teacher AD Name"
-            strFileName = strFolderName & "\ClassesByTeacherADName.csv"
-        Else
+        If Not ShowAddClassDialog(True, False) Then
             Exit Sub
         End If
 
-        AddNewUserOrClassForm.comboUniqueClassID.Text = listboxClassName.SelectedValue.ToString
-        AddNewUserOrClassForm.textboxTeacherName.Enabled = True
-        AddNewUserOrClassForm.comboUniqueClassID.Enabled = False
-        AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
-        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = strTeacherName
+        Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
+        Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
-        Dim resultAddNew As New DialogResult
-        Dim resultRetry As New DialogResult
-
-        resultAddNew = AddNewUserOrClassForm.ShowDialog()
-
-        If resultAddNew = DialogResult.Cancel Then
-            Exit Sub
-        End If
-
-        While AddNewUserOrClassForm.textboxTeacherName.Text = "" Or AddNewUserOrClassForm.textboxPersonalizedName.Text = ""
-            resultRetry = MsgBox("You must specify both a " & strTeacherName & " and a Personalized Name.", MessageBoxButtons.RetryCancel)
-            If resultRetry = DialogResult.Cancel Then
-                Exit Sub
-            ElseIf resultRetry = DialogResult.Retry Then
-                resultAddNew = AddNewUserOrClassForm.ShowDialog()
-                If resultAddNew = DialogResult.Cancel Then
-                    Exit Sub
-                End If
-            End If
-        End While
-
-        Dim newLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
-
-        AddNewLineToFile(strFileName, newLine)
+        AddNewLineToFile(strFileName, strNewLine)
 
         LoadCSVData()
 
@@ -536,64 +403,11 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub AddNewTeacher(sender As Object, e As EventArgs) Handles buttonAddNewLoginName.Click, buttonAddNewMachineName.Click, buttonAddNewADName.Click
 
-        AddNewUserOrClassForm.textboxTeacherName.Clear()
-        AddNewUserOrClassForm.comboUniqueClassID.Text = ""
-        AddNewUserOrClassForm.textboxPersonalizedName.Clear()
-
-        Dim strTeacherName As String
-        Dim strFileName As String
-        Dim strQuery As String
-
-        If radioLoginName.Checked Then
-            strTeacherName = "Teacher Login Name"
-            strFileName = strFolderName & "\ClassesByTeacherLoginName.csv"
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherLoginName.csv] ORDER BY UniqueClassIdentifier"
-        ElseIf radioMachineName.Checked Then
-            strTeacherName = "Teacher Machine Name"
-            strFileName = strFolderName & "\ClassesByTeacherMachineName.csv"
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherMachineName.csv] ORDER BY UniqueClassIdentifier"
-        ElseIf radioADName.Checked Then
-            strTeacherName = "Teacher AD Name"
-            strFileName = strFolderName & "\ClassesByTeacherADName.csv"
-            strQuery = "SELECT DISTINCT [UniqueClassIdentifier] FROM [ClassesByTeacherADName.csv] ORDER BY UniqueClassIdentifier"
-        Else
+        If Not ShowAddClassDialog(True, True) Then
             Exit Sub
         End If
 
-        AddNewUserOrClassForm.textboxTeacherName.Enabled = True
-        AddNewUserOrClassForm.comboUniqueClassID.Enabled = True
-        AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
-        tableClassesByType.Clear()
-
-        FillTableUsingQuery(strQuery, tableClassesByType)
-
-        AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
-        AddNewUserOrClassForm.comboUniqueClassID.DisplayMember = "UniqueClassIdentifier"
-        AddNewUserOrClassForm.comboUniqueClassID.ValueMember = "UniqueClassIdentifier"
-
-        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = strTeacherName
-
-        Dim resultAddNew As New DialogResult
-        Dim resultRetry As New DialogResult
-
-        resultAddNew = AddNewUserOrClassForm.ShowDialog()
-
-        If resultAddNew = DialogResult.Cancel Then
-            Exit Sub
-        End If
-
-        While AddNewUserOrClassForm.textboxTeacherName.Text = "" Or AddNewUserOrClassForm.comboUniqueClassID.Text = "" Or AddNewUserOrClassForm.textboxPersonalizedName.Text = ""
-            resultRetry = MsgBox("You must specify a Teacher Name, a Unique Class Id, and a Personalized Class Name.", MessageBoxButtons.RetryCancel)
-            If resultRetry = DialogResult.Cancel Then
-                Exit Sub
-            ElseIf resultRetry = DialogResult.Retry Then
-                resultAddNew = AddNewUserOrClassForm.ShowDialog()
-                If resultAddNew = DialogResult.Cancel Then
-                    Exit Sub
-                End If
-            End If
-        End While
-
+        Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
 
         AddNewLineToFile(strFileName, strNewLine)
@@ -637,9 +451,72 @@ Public Class LanSchoolClassListsHelper
     End Sub
 
     Private Sub FillTableUsingQuery(ByVal query As String, ByRef table As DataTable)
+        ' Clear the table before filling with new data
+        table.Clear()
+
         Using adapt As New OleDbDataAdapter(query, strDBConnection)
             adapt.Fill(table)
         End Using
     End Sub
+
+    Private Function ShowAddClassDialog(ByVal boolTeacherNameEnabled As Boolean, ByVal boolUniqueClassIDEnabled As Boolean) As Boolean
+
+        ' Clear any old values from form boxes
+        AddNewUserOrClassForm.textboxTeacherName.Clear()
+        AddNewUserOrClassForm.comboUniqueClassID.Text = ""
+        AddNewUserOrClassForm.textboxPersonalizedName.Clear()
+
+        ' Set prompt for Teacher Name
+        AddNewUserOrClassForm.labelTeacherNamePrompt.Text = "Teacher " & strNamePrompt
+
+        If Not boolTeacherNameEnabled Then
+            AddNewUserOrClassForm.textboxTeacherName.Text = strSelectedTeacher
+        End If
+
+        If boolUniqueClassIDEnabled Then
+            Dim strQuery As String = "SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strClassesByTeacherCSV & "] ORDER BY UniqueClassIdentifier"
+
+            ' Load list of classes from CSV files
+            FillTableUsingQuery(strQuery, tableClassesByType)
+
+            ' Set data source, display, and value members for combo box
+            AddNewUserOrClassForm.comboUniqueClassID.DataSource = tableClassesByType
+            AddNewUserOrClassForm.comboUniqueClassID.DisplayMember = "UniqueClassIdentifier"
+            AddNewUserOrClassForm.comboUniqueClassID.ValueMember = "UniqueClassIdentifier"
+        Else
+            AddNewUserOrClassForm.comboUniqueClassID.Text = listboxClassName.SelectedValue.ToString
+        End If
+
+        ' Set which fields can be modified
+        AddNewUserOrClassForm.textboxTeacherName.Enabled = boolTeacherNameEnabled
+        AddNewUserOrClassForm.comboUniqueClassID.Enabled = boolUniqueClassIDEnabled
+        AddNewUserOrClassForm.textboxPersonalizedName.Enabled = True
+
+        Dim resultAddNew As New DialogResult
+        Dim resultRetry As New DialogResult
+
+        Do
+            resultAddNew = AddNewUserOrClassForm.ShowDialog()
+
+            If resultAddNew = DialogResult.Cancel Then
+                Return False
+                Exit Function
+            ElseIf AddNewUserOrClassForm.textboxTeacherName.Text = "" Or AddNewUserOrClassForm.comboUniqueClassID.Text = "" Or AddNewUserOrClassForm.textboxPersonalizedName.Text = "" Then
+                resultRetry = MsgBox("You must specify a Teacher " & strNamePrompt & ", a Unique Class Id, and a Personalized Class Name.", MessageBoxButtons.RetryCancel)
+                If resultRetry = DialogResult.Cancel Then
+                    Return False
+                    Exit Function
+                ElseIf resultRetry = DialogResult.Retry Then
+                    Continue Do
+                End If
+            Else
+                Return True
+                Exit Function
+            End If
+
+        Loop
+
+
+    End Function
 
 End Class

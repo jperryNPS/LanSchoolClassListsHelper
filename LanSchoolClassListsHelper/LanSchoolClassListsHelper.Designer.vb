@@ -330,18 +330,18 @@ Partial Class LanSchoolClassListsHelper
         'OpenToolStripMenuItem
         '
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OpenToolStripMenuItem.Text = "Open..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(109, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(149, 6)
         '
         'tsitemExit
         '
         Me.tsitemExit.Name = "tsitemExit"
-        Me.tsitemExit.Size = New System.Drawing.Size(112, 22)
+        Me.tsitemExit.Size = New System.Drawing.Size(152, 22)
         Me.tsitemExit.Text = "Exit"
         '
         'HelpToolStripMenuItem
