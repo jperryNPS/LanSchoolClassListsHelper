@@ -63,6 +63,8 @@ Partial Class LanSchoolClassListsHelper
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemHideEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemShowOnlyEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsitemShowAllClassesByType = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -357,7 +359,7 @@ Partial Class LanSchoolClassListsHelper
         'tsitemAbout
         '
         Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(152, 22)
+        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
         Me.tsitemAbout.Text = "About"
         '
         'MenuStrip1
@@ -371,7 +373,7 @@ Partial Class LanSchoolClassListsHelper
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses, Me.tsitemShowOnlyEmptyClasses})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses, Me.tsitemShowOnlyEmptyClasses, Me.ToolStripSeparator4, Me.tsitemShowAllClassesByType})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
@@ -387,6 +389,17 @@ Partial Class LanSchoolClassListsHelper
         Me.tsitemShowOnlyEmptyClasses.Name = "tsitemShowOnlyEmptyClasses"
         Me.tsitemShowOnlyEmptyClasses.Size = New System.Drawing.Size(205, 22)
         Me.tsitemShowOnlyEmptyClasses.Text = "Show only empty classes"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(202, 6)
+        '
+        'tsitemShowAllClassesByType
+        '
+        Me.tsitemShowAllClassesByType.Name = "tsitemShowAllClassesByType"
+        Me.tsitemShowAllClassesByType.Size = New System.Drawing.Size(205, 22)
+        Me.tsitemShowAllClassesByType.Text = "Show all classes by type"
         '
         'LanSchoolClassListsHelper
         '
@@ -464,4 +477,6 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsitemHideEmptyClasses As ToolStripMenuItem
     Friend WithEvents tsitemShowOnlyEmptyClasses As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents tsitemShowAllClassesByType As ToolStripMenuItem
 End Class

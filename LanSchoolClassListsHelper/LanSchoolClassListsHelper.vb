@@ -103,12 +103,21 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub EvaluateClassList()
 
-        Dim strQuery As String = "SELECT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "] WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "'"
+        Dim strQuery As String = "SELECT DISTINCT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "]"
+
+        If Not tsitemShowAllClassesByType.Checked Then
+            strQuery &= " WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "'"
+            If tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
+                strQuery &= " AND "
+            End If
+        ElseIf tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
+            strQuery &= " WHERE "
+        End If
 
         If tsitemHideEmptyClasses.Checked Then
-            strQuery &= " AND [UniqueClassIdentifier] IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
+            strQuery &= "[UniqueClassIdentifier] IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
         ElseIf tsitemShowOnlyEmptyClasses.Checked Then
-            strQuery &= " AND [UniqueClassIdentifier] NOT IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
+            strQuery &= "[UniqueClassIdentifier] NOT IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
         End If
 
         strQuery &= " ORDER BY [Personalized Class Name]"
@@ -239,11 +248,18 @@ Public Class LanSchoolClassListsHelper
             End Select
 
             ' Enable or disable the other elements by the appropriate radio button
-            comboLoginName.Enabled = radioLoginName.Checked
+            If tsitemShowAllClassesByType.Checked Then
+                comboLoginName.Enabled = False
+                comboMachineName.Enabled = False
+                comboADName.Enabled = False
+            Else
+                comboLoginName.Enabled = radioLoginName.Checked
+                comboMachineName.Enabled = radioMachineName.Checked
+                comboADName.Enabled = radioADName.Checked
+            End If
+
             buttonAddNewLoginName.Enabled = radioLoginName.Checked
-            comboMachineName.Enabled = radioMachineName.Checked
             buttonAddNewMachineName.Enabled = radioMachineName.Checked
-            comboADName.Enabled = radioADName.Checked
             buttonAddNewADName.Enabled = radioADName.Checked
 
             listboxClassName.Enabled = True ' Enable the class list box
@@ -309,8 +325,9 @@ Public Class LanSchoolClassListsHelper
     End Sub
 
     Private Sub rcmenuClassListBox_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles rcmenuClassListBox.Opening
-        ' If no class is selected don't show add teacher or delete class
-        rcitemDeleteClass.Enabled = (listboxClassName.SelectedIndex >= 0)
+        ' If no class is selected or if show all classes is enabled delete class
+        rcitemDeleteClass.Enabled = (listboxClassName.SelectedIndex >= 0) And Not tsitemShowAllClassesByType.Checked
+        ' If no class is selected don't show add teacher
         rcitemAddTeacher.Enabled = (listboxClassName.SelectedIndex >= 0)
     End Sub
 
@@ -375,8 +392,8 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub AddClassToTeacher(sender As Object, e As EventArgs) Handles buttonAddNewClass.Click, rcitemAddClass.Click
 
-        ' Show add class dialog with teacher name locked
-        If Not ShowAddClassDialog(False, True) Then
+        ' Show add class dialog with teacher name locked if menu item is unchecked, but unlocked if it is checked
+        If Not ShowAddClassDialog(tsitemShowAllClassesByType.Checked, True) Then
             Exit Sub
         End If
 
@@ -565,5 +582,29 @@ Public Class LanSchoolClassListsHelper
 
         EvaluateClassList()
 
+    End Sub
+
+    Private Sub tsitemShowAllClassesByType_Click(sender As Object, e As EventArgs) Handles tsitemShowAllClassesByType.Click
+        tsitemShowAllClassesByType.Checked = Not tsitemShowAllClassesByType.Checked
+
+        If tsitemShowAllClassesByType.Checked Then
+            ' Show all classes, regardless of teacher name
+
+            ' Disable combo boxes
+            comboLoginName.Enabled = False
+            comboMachineName.Enabled = False
+            comboADName.Enabled = False
+
+        Else
+            ' Show only classes based on selected teacher name in combo box
+
+            ' Enable combo boxes
+            comboLoginName.Enabled = radioLoginName.Checked
+            comboMachineName.Enabled = radioMachineName.Checked
+            comboADName.Enabled = radioADName.Checked
+
+        End If
+
+        EvaluateClassList()
     End Sub
 End Class
