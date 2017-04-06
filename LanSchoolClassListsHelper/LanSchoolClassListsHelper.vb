@@ -107,6 +107,8 @@ Public Class LanSchoolClassListsHelper
 
         If tsitemHideEmptyClasses.Checked Then
             strQuery &= " AND [UniqueClassIdentifier] IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
+        ElseIf tsitemShowOnlyEmptyClasses.Checked Then
+            strQuery &= " AND [UniqueClassIdentifier] NOT IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
         End If
 
         strQuery &= " ORDER BY [Personalized Class Name]"
@@ -539,6 +541,25 @@ Public Class LanSchoolClassListsHelper
             If MsgBox("Enabling this option will hide all empty classes, even newly created ones.", MessageBoxButtons.OKCancel) = DialogResult.Cancel Then
                 tsitemHideEmptyClasses.Checked = False
                 Exit Sub
+            Else
+                tsitemShowOnlyEmptyClasses.Checked = False ' you can't have both of these items checked
+            End If
+        End If
+
+        EvaluateClassList()
+
+    End Sub
+
+    Private Sub ShowOnlyEmptyClassesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsitemShowOnlyEmptyClasses.Click
+        tsitemShowOnlyEmptyClasses.Checked = Not tsitemShowOnlyEmptyClasses.Checked
+
+        ' Warn about repurcussions and confirm
+        If tsitemShowOnlyEmptyClasses.Checked Then
+            If MsgBox("Enabling this option will show only classes with no students.", MessageBoxButtons.OKCancel) = DialogResult.Cancel Then
+                tsitemShowOnlyEmptyClasses.Checked = False
+                Exit Sub
+            Else
+                tsitemHideEmptyClasses.Checked = False ' you can't have both of these items checked
             End If
         End If
 

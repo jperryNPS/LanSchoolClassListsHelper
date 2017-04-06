@@ -62,6 +62,7 @@ Partial Class LanSchoolClassListsHelper
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ViewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemHideEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemShowOnlyEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -370,7 +371,7 @@ Partial Class LanSchoolClassListsHelper
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses, Me.tsitemShowOnlyEmptyClasses})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "View"
@@ -378,8 +379,14 @@ Partial Class LanSchoolClassListsHelper
         'tsitemHideEmptyClasses
         '
         Me.tsitemHideEmptyClasses.Name = "tsitemHideEmptyClasses"
-        Me.tsitemHideEmptyClasses.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemHideEmptyClasses.Size = New System.Drawing.Size(205, 22)
         Me.tsitemHideEmptyClasses.Text = "Hide empty classes"
+        '
+        'tsitemShowOnlyEmptyClasses
+        '
+        Me.tsitemShowOnlyEmptyClasses.Name = "tsitemShowOnlyEmptyClasses"
+        Me.tsitemShowOnlyEmptyClasses.Size = New System.Drawing.Size(205, 22)
+        Me.tsitemShowOnlyEmptyClasses.Text = "Show only empty classes"
         '
         'LanSchoolClassListsHelper
         '
@@ -456,4 +463,5 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsitemHideEmptyClasses As ToolStripMenuItem
+    Friend WithEvents tsitemShowOnlyEmptyClasses As ToolStripMenuItem
 End Class
