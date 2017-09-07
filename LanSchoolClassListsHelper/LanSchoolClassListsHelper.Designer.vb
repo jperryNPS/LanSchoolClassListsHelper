@@ -31,7 +31,7 @@ Partial Class LanSchoolClassListsHelper
         Me.comboADName = New System.Windows.Forms.ComboBox()
         Me.listboxClassName = New System.Windows.Forms.ListBox()
         Me.listboxStudents = New System.Windows.Forms.ListBox()
-        Me.FolderBrowserDialog1 = New System.Windows.Forms.FolderBrowserDialog()
+        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.textboxFolderPath = New System.Windows.Forms.TextBox()
         Me.BrowseButton = New System.Windows.Forms.Button()
         Me.buttonLoad = New System.Windows.Forms.Button()
@@ -54,12 +54,12 @@ Partial Class LanSchoolClassListsHelper
         Me.rcitemAddClass = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcitemAddTeacher = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OpenToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemChangeDirectory = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsitemExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.MenuStrip = New System.Windows.Forms.MenuStrip()
         Me.EditToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAddLoginNameCSVFiles = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAddMachineNameCSVFiles = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,9 +69,14 @@ Partial Class LanSchoolClassListsHelper
         Me.tsitemShowOnlyEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsitemShowAllClassesByType = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+        Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsitemSaveABackup = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemRestoreABackup = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
+        Me.MenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'radioLoginName
@@ -161,10 +166,10 @@ Partial Class LanSchoolClassListsHelper
         Me.listboxStudents.Size = New System.Drawing.Size(211, 368)
         Me.listboxStudents.TabIndex = 14
         '
-        'FolderBrowserDialog1
+        'FolderBrowserDialog
         '
-        Me.FolderBrowserDialog1.Description = "Please select the folder containing the LanSchool Class List CSV Files..."
-        Me.FolderBrowserDialog1.ShowNewFolderButton = False
+        Me.FolderBrowserDialog.Description = "Please select the folder containing the LanSchool Class List CSV Files..."
+        Me.FolderBrowserDialog.ShowNewFolderButton = False
         '
         'textboxFolderPath
         '
@@ -331,26 +336,26 @@ Partial Class LanSchoolClassListsHelper
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenToolStripMenuItem, Me.ToolStripSeparator3, Me.tsitemExit})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemChangeDirectory, Me.ToolStripSeparator3, Me.tsitemSaveABackup, Me.tsitemRestoreABackup, Me.ToolStripSeparator5, Me.tsitemExit})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
         '
-        'OpenToolStripMenuItem
+        'tsitemChangeDirectory
         '
-        Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(112, 22)
-        Me.OpenToolStripMenuItem.Text = "Open..."
+        Me.tsitemChangeDirectory.Name = "tsitemChangeDirectory"
+        Me.tsitemChangeDirectory.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemChangeDirectory.Text = "Change Directory..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(109, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(172, 6)
         '
         'tsitemExit
         '
         Me.tsitemExit.Name = "tsitemExit"
-        Me.tsitemExit.Size = New System.Drawing.Size(112, 22)
+        Me.tsitemExit.Size = New System.Drawing.Size(175, 22)
         Me.tsitemExit.Text = "Exit"
         '
         'HelpToolStripMenuItem
@@ -363,17 +368,17 @@ Partial Class LanSchoolClassListsHelper
         'tsitemAbout
         '
         Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
+        Me.tsitemAbout.Size = New System.Drawing.Size(152, 22)
         Me.tsitemAbout.Text = "About"
         '
-        'MenuStrip1
+        'MenuStrip
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(461, 24)
-        Me.MenuStrip1.TabIndex = 0
-        Me.MenuStrip1.Text = "MenuStrip1"
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip.Name = "MenuStrip"
+        Me.MenuStrip.Size = New System.Drawing.Size(461, 24)
+        Me.MenuStrip.TabIndex = 0
+        Me.MenuStrip.Text = "MenuStrip1"
         '
         'EditToolStripMenuItem
         '
@@ -433,6 +438,27 @@ Partial Class LanSchoolClassListsHelper
         Me.tsitemShowAllClassesByType.Size = New System.Drawing.Size(205, 22)
         Me.tsitemShowAllClassesByType.Text = "Show all classes by type"
         '
+        'OpenFileDialog
+        '
+        Me.OpenFileDialog.FileName = "OpenFileDialog"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(172, 6)
+        '
+        'tsitemSaveABackup
+        '
+        Me.tsitemSaveABackup.Name = "tsitemSaveABackup"
+        Me.tsitemSaveABackup.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemSaveABackup.Text = "Save a Backup..."
+        '
+        'tsitemRestoreABackup
+        '
+        Me.tsitemRestoreABackup.Name = "tsitemRestoreABackup"
+        Me.tsitemRestoreABackup.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemRestoreABackup.Text = "Restore a Backup..."
+        '
         'LanSchoolClassListsHelper
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -456,15 +482,15 @@ Partial Class LanSchoolClassListsHelper
         Me.Controls.Add(Me.radioADName)
         Me.Controls.Add(Me.radioMachineName)
         Me.Controls.Add(Me.radioLoginName)
-        Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.MenuStrip)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
-        Me.MainMenuStrip = Me.MenuStrip1
+        Me.MainMenuStrip = Me.MenuStrip
         Me.Name = "LanSchoolClassListsHelper"
         Me.Text = "LanSchool Class Lists Helper"
         Me.rcmenuStudentListBox.ResumeLayout(False)
         Me.rcmenuClassListBox.ResumeLayout(False)
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
+        Me.MenuStrip.ResumeLayout(False)
+        Me.MenuStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -477,7 +503,7 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents comboADName As ComboBox
     Friend WithEvents listboxClassName As ListBox
     Friend WithEvents listboxStudents As ListBox
-    Friend WithEvents FolderBrowserDialog1 As FolderBrowserDialog
+    Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
     Friend WithEvents textboxFolderPath As TextBox
     Friend WithEvents BrowseButton As Button
     Friend WithEvents buttonLoad As Button
@@ -500,12 +526,12 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents rcitemAddTeacher As ToolStripMenuItem
     Friend WithEvents FileToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents OpenToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsitemChangeDirectory As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents tsitemExit As ToolStripMenuItem
     Friend WithEvents HelpToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsitemAbout As ToolStripMenuItem
-    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents MenuStrip As MenuStrip
     Friend WithEvents ViewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsitemHideEmptyClasses As ToolStripMenuItem
     Friend WithEvents tsitemShowOnlyEmptyClasses As ToolStripMenuItem
@@ -515,4 +541,9 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents tsitemAddLoginNameCSVFiles As ToolStripMenuItem
     Friend WithEvents tsitemAddMachineNameCSVFiles As ToolStripMenuItem
     Friend WithEvents tsitemAddADNameCSVFiles As ToolStripMenuItem
+    Friend WithEvents OpenFileDialog As OpenFileDialog
+    Friend WithEvents SaveFileDialog As SaveFileDialog
+    Friend WithEvents tsitemSaveABackup As ToolStripMenuItem
+    Friend WithEvents tsitemRestoreABackup As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
 End Class

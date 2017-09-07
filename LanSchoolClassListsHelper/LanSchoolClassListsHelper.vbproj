@@ -79,6 +79,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -94,16 +96,16 @@
     <Import Include="System.Data" />
     <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
+    <Import Include="System.IO" />
+    <Import Include="System.IO.Compression" />
+    <Import Include="System.IO.Compression.FileSystem" />
     <Import Include="System.Windows.Forms" />
-    <Import Include="System.Linq" />
-    <Import Include="System.Xml.Linq" />
-    <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox1.Designer.vb">
-      <DependentUpon>AboutBox1.vb</DependentUpon>
+    <Compile Include="AboutBox.Designer.vb">
+      <DependentUpon>AboutBox.vb</DependentUpon>
     </Compile>
-    <Compile Include="AboutBox1.vb">
+    <Compile Include="AboutBox.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddNewUserOrClassForm.Designer.vb">
@@ -136,8 +138,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutBox1.resx">
-      <DependentUpon>AboutBox1.vb</DependentUpon>
+    <EmbeddedResource Include="AboutBox.resx">
+      <DependentUpon>AboutBox.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddNewUserOrClassForm.resx">
       <DependentUpon>AddNewUserOrClassForm.vb</DependentUpon>

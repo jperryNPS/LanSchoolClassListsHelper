@@ -1,4 +1,6 @@
 ﻿Imports System.Data.OleDb
+Imports System.IO
+Imports System.IO.Compression
 
 Public Class LanSchoolClassListsHelper
 
@@ -206,16 +208,16 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub tsitemAbout_Click(sender As Object, e As EventArgs) Handles tsitemAbout.Click
         ' Simply show the About Box when the user clicks about.
-        AboutBox1.Visible = True
-        AboutBox1.Activate()
+        AboutBox.Visible = True
+        AboutBox.Activate()
     End Sub
 
-    Private Sub OpenBrowseForFolder(sender As Object, e As EventArgs) Handles BrowseButton.Click, OpenToolStripMenuItem.Click
+    Private Sub OpenBrowseForFolder(sender As Object, e As EventArgs) Handles BrowseButton.Click, tsitemChangeDirectory.Click
         ' Open the folder browser dialog when Menu Item open or browse button clicked
-        Dim result As DialogResult = FolderBrowserDialog1.ShowDialog()
+        Dim result As DialogResult = FolderBrowserDialog.ShowDialog()
 
         If (result = DialogResult.OK) Then ' Only continue to load if they click OK
-            strFolderName = FolderBrowserDialog1.SelectedPath
+            strFolderName = FolderBrowserDialog.SelectedPath
             LoadCSVData(True) ' Load the information for the CSV files
         End If
 
@@ -651,6 +653,108 @@ Public Class LanSchoolClassListsHelper
         AddNewLineToFile(strFolderName + "\ClassesByTeacherADName.csv", "TeacherADFullName,UniqueClassIdentifier,Personalized Class Name")
         AddNewLineToFile(strFolderName + "\StudentsForClassByADName.csv", "UniqueClassIdentifier,StudentADFullName")
         LoadCSVData()
+    End Sub
+
+    Private Sub tsitemSaveABackup_Click(sender As Object, e As EventArgs) Handles tsitemSaveABackup.Click
+        SaveFileDialog.Title = "Please select a New File"
+        SaveFileDialog.InitialDirectory = strFolderName
+        SaveFileDialog.Filter = "Zip Files (*.zip)|*.zip"
+        SaveFileDialog.FilterIndex = 1
+        SaveFileDialog.FileName = "LSClassListBackup_" + DateTime.Now.ToString("s").Replace(":", "") + ".zip"
+
+        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim strFileName As String = SaveFileDialog.FileName
+
+            If (File.Exists(strFileName)) Then
+                ' The archive already exists and needs to be deleted
+                If MessageBox.Show("Are you sure you want to overwrite this backup?" & vbCrLf & "This action cannot be undone.", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    File.Delete(strFileName)
+                Else
+                    MessageBox.Show("Backup cancelled because the file already exists.", "Backup Cancelled", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            End If
+
+            Dim archive As ZipArchive = ZipFile.Open(strFileName, ZipArchiveMode.Create)
+
+            Using archive
+                For Each strCSVFileName In {"ClassesByTeacherLoginName.csv", "StudentsForClassByLoginName.csv", "ClassesByTeacherMachineName.csv", "StudentsForClassByMachineName.csv", "ClassesByTeacherADName.csv", "StudentsForClassByADName.csv"}
+                    If (File.Exists(strFolderName + "\" + strCSVFileName)) Then
+                        archive.CreateEntryFromFile(strFolderName + "\" + strCSVFileName, strCSVFileName)
+                    End If
+                Next
+
+                MessageBox.Show("Backup completed.", "Backup Completed", MessageBoxButtons.OK)
+            End Using
+        End If
+    End Sub
+
+    Private Sub tsitemRestoreABackup_Click(sender As Object, e As EventArgs) Handles tsitemRestoreABackup.Click
+        OpenFileDialog.Title = "Please select a File"
+        OpenFileDialog.InitialDirectory = strFolderName
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.Filter = "Zip Files (*.zip)|*.zip"
+        OpenFileDialog.FilterIndex = 1
+        OpenFileDialog.FileName = String.Empty
+
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim strFileName As String = OpenFileDialog.FileName
+            Dim boolLoginNameClassesByTeacherCSV As Boolean = False
+            Dim boolLoginNameStudentsForClassCSV As Boolean = False
+            Dim boolMachineNameClassesByTeacherCSV As Boolean = False
+            Dim boolMachineNameStudentsForClassCSV As Boolean = False
+            Dim boolADNameClassesByTeacherCSV As Boolean = False
+            Dim boolADNameStudentsForClassCSV As Boolean = False
+
+            Dim archive As ZipArchive = ZipFile.OpenRead(strFileName)
+
+            Using archive
+                For Each entry As ZipArchiveEntry In archive.Entries
+                    Select Case entry.Name.ToString()
+                        Case "ClassesByTeacherLoginName.csv"
+                            boolLoginNameClassesByTeacherCSV = True
+                        Case "StudentsForClassByLoginName.csv"
+                            boolLoginNameStudentsForClassCSV = True
+                        Case "ClassesByTeacherMachineName.csv"
+                            boolMachineNameClassesByTeacherCSV = True
+                        Case "StudentsForClassByMachineName.csv"
+                            boolMachineNameStudentsForClassCSV = True
+                        Case "ClassesByTeacherADName.csv"
+                            boolADNameClassesByTeacherCSV = True
+                        Case "StudentsForClassByADName.csv"
+                            boolADNameStudentsForClassCSV = True
+                    End Select
+                Next
+
+                If (boolLoginNameClassesByTeacherCSV And boolLoginNameStudentsForClassCSV) Then
+                    ' The file exists in the archive
+                    If MessageBox.Show("Are you sure you want to restore Classes by Login Name from this backup?" & vbCrLf & "All changes since the backup will be lost.", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        ' Only run the restore if the end user clicks yes
+                        archive.GetEntry("ClassesByTeacherLoginName.csv").ExtractToFile(strFolderName + "\ClassesByTeacherLoginName.csv", True)
+                        archive.GetEntry("StudentsForClassByLoginName.csv").ExtractToFile(strFolderName + "\StudentsForClassByLoginName.csv", True)
+                    End If
+                End If
+
+                If (boolMachineNameClassesByTeacherCSV And boolMachineNameStudentsForClassCSV) Then
+                    If MessageBox.Show("Are you sure you want to restore Classes by Machine Name from this backup?" & vbCrLf & "All changes since the backup will be lost.", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        ' Only run the restore if the end user clicks yes
+                        archive.GetEntry("ClassesByTeacherMachineName.csv").ExtractToFile(strFolderName + "\ClassesByTeacherMachineName.csv", True)
+                        archive.GetEntry("StudentsForClassByMachineName.csv").ExtractToFile(strFolderName + "\StudentsForClassByMachineName.csv", True)
+                    End If
+                End If
+
+                If (boolADNameClassesByTeacherCSV And boolADNameStudentsForClassCSV) Then
+                    If MessageBox.Show("Are you sure you want to restore Classes by AD Name from this backup?" & vbCrLf & "All changes since the backup will be lost.", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        ' Only run the restore if the end user clicks yes
+                        archive.GetEntry("ClassesByTeacherADName.csv").ExtractToFile(strFolderName + "\ClassesByTeacherADName.csv", True)
+                        archive.GetEntry("StudentsForClassByADName.csv").ExtractToFile(strFolderName + "\StudentsForClassByADName.csv", True)
+                    End If
+                End If
+
+            End Using
+
+            LoadCSVData()
+        End If
     End Sub
 
 End Class
