@@ -56,6 +56,9 @@ Partial Class LanSchoolClassListsHelper
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemChangeDirectory = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsitemSaveABackup = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsitemRestoreABackup = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsitemExit = New System.Windows.Forms.ToolStripMenuItem()
         Me.HelpToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsitemAbout = New System.Windows.Forms.ToolStripMenuItem()
@@ -69,11 +72,10 @@ Partial Class LanSchoolClassListsHelper
         Me.tsitemShowOnlyEmptyClasses = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsitemShowAllClassesByType = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsitemSaveABackup = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsitemRestoreABackup = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
         Me.MenuStrip.SuspendLayout()
@@ -352,6 +354,23 @@ Partial Class LanSchoolClassListsHelper
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
         Me.ToolStripSeparator3.Size = New System.Drawing.Size(172, 6)
         '
+        'tsitemSaveABackup
+        '
+        Me.tsitemSaveABackup.Name = "tsitemSaveABackup"
+        Me.tsitemSaveABackup.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemSaveABackup.Text = "Save a Backup..."
+        '
+        'tsitemRestoreABackup
+        '
+        Me.tsitemRestoreABackup.Name = "tsitemRestoreABackup"
+        Me.tsitemRestoreABackup.Size = New System.Drawing.Size(175, 22)
+        Me.tsitemRestoreABackup.Text = "Restore a Backup..."
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(172, 6)
+        '
         'tsitemExit
         '
         Me.tsitemExit.Name = "tsitemExit"
@@ -368,12 +387,12 @@ Partial Class LanSchoolClassListsHelper
         'tsitemAbout
         '
         Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(152, 22)
+        Me.tsitemAbout.Size = New System.Drawing.Size(107, 22)
         Me.tsitemAbout.Text = "About"
         '
         'MenuStrip
         '
-        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.HelpToolStripMenuItem})
+        Me.MenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.EditToolStripMenuItem, Me.ViewToolStripMenuItem, Me.ToolsToolStripMenuItem, Me.HelpToolStripMenuItem})
         Me.MenuStrip.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip.Name = "MenuStrip"
         Me.MenuStrip.Size = New System.Drawing.Size(461, 24)
@@ -438,26 +457,22 @@ Partial Class LanSchoolClassListsHelper
         Me.tsitemShowAllClassesByType.Size = New System.Drawing.Size(205, 22)
         Me.tsitemShowAllClassesByType.Text = "Show all classes by type"
         '
+        'ToolsToolStripMenuItem
+        '
+        Me.ToolsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SettingsToolStripMenuItem})
+        Me.ToolsToolStripMenuItem.Name = "ToolsToolStripMenuItem"
+        Me.ToolsToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
+        Me.ToolsToolStripMenuItem.Text = "Tools"
+        '
+        'SettingsToolStripMenuItem
+        '
+        Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
+        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
+        Me.SettingsToolStripMenuItem.Text = "Settings"
+        '
         'OpenFileDialog
         '
         Me.OpenFileDialog.FileName = "OpenFileDialog"
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(172, 6)
-        '
-        'tsitemSaveABackup
-        '
-        Me.tsitemSaveABackup.Name = "tsitemSaveABackup"
-        Me.tsitemSaveABackup.Size = New System.Drawing.Size(175, 22)
-        Me.tsitemSaveABackup.Text = "Save a Backup..."
-        '
-        'tsitemRestoreABackup
-        '
-        Me.tsitemRestoreABackup.Name = "tsitemRestoreABackup"
-        Me.tsitemRestoreABackup.Size = New System.Drawing.Size(175, 22)
-        Me.tsitemRestoreABackup.Text = "Restore a Backup..."
         '
         'LanSchoolClassListsHelper
         '
@@ -546,4 +561,6 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents tsitemSaveABackup As ToolStripMenuItem
     Friend WithEvents tsitemRestoreABackup As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+    Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SettingsToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -1,10 +1,12 @@
 ﻿Imports System.Data.OleDb
 Imports System.IO
 Imports System.IO.Compression
+Imports Microsoft.Win32
 
 Public Class LanSchoolClassListsHelper
 
     Private boolFolderOpened As Boolean = False
+    Private boolChangeLog As Boolean = True
 
     Private strFolderName As String = My.Application.Info.DirectoryPath ' Set the default folder to the current directory
     Private strDBConnection As String
@@ -14,6 +16,7 @@ Public Class LanSchoolClassListsHelper
     Private strTeacherNameField As String
     Private strStudentNameField As String
     Private strSelectedTeacher As String
+    Private strChangeLogCSV As String
 
     ' Create the Data Tables for storing the teacher lists
     Private tableTeacherLoginName As New DataTable()
@@ -26,6 +29,30 @@ Public Class LanSchoolClassListsHelper
     Private tableClassesByType As New DataTable()
     Private tableClassesWithStudentsByType As New DataTable()
     Private tableClassesWithoutTeachersByType As New DataTable()
+
+    Private Function CheckAndFixRegistrySettings() As Boolean
+        Dim regSettings As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Microsoft\Jet\4.0\Engines\Text")
+        If (regSettings.GetValue("ImportMixedTypes") = "Text") And (regSettings.GetValue("MaxScanRows") = 0) Then
+            Return True
+        Else
+            If MsgBox("The jet settings in the registry must be changed to allow this program to work properly." + vbCrLf + vbCrLf + "You will need administrative rights, you may be prompted twice." + vbCrLf + "Would you like to make these changes now?" + vbCrLf + vbCrLf + "Choosing no will quit the program.", MsgBoxStyle.YesNo, "Jet Database Settings") = MsgBoxResult.Yes Then
+                RegAddAsAdmin("HKLM\Software\Microsoft\Jet\4.0\Engines\Text", "ImportMixedTypes", "Text")
+                RegAddAsAdmin("HKLM\Software\Microsoft\Jet\4.0\Engines\Text", "MaxScanRows", "0")
+                Return True
+            Else
+                Return False
+            End If
+        End If
+    End Function
+
+    Private Sub RegAddAsAdmin(ByVal strRegistryKey As String, ByVal strRegistryValueName As String, ByVal strRegistryValueData As String)
+        Dim prcRegAdd As New Process()
+        prcRegAdd.StartInfo.UseShellExecute = True
+        prcRegAdd.StartInfo.Verb = "runas"
+        prcRegAdd.StartInfo.FileName = "reg"
+        prcRegAdd.StartInfo.Arguments = "add " + strRegistryKey + " /v " + strRegistryValueName + " /d " + strRegistryValueData + " /f"
+        prcRegAdd.Start()
+    End Sub
 
     Private Sub LoadCSVData(Optional ByVal resetRadio As Boolean = False)
         textboxFolderPath.Text = strFolderName ' Populate location text box with the most recent location
@@ -43,6 +70,9 @@ Public Class LanSchoolClassListsHelper
 
         If (strFolderName <> "") Then ' Only continue if the folder exists
             buttonLoad.Enabled = True
+
+            ' Set path of Change Log File
+            strChangeLogCSV = strFolderName + "\ChangeLog.csv"
 
             ' Enable or disable the radio buttons depending on what CSV files exist
 
@@ -78,7 +108,7 @@ Public Class LanSchoolClassListsHelper
 
         If (radioLoginName.Enabled Or radioMachineName.Enabled Or radioADName.Enabled) Then ' Only change the DB Connection if any of the CSV Files exist
             buttonLoad.Text = "Reload"
-            strDBConnection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strFolderName & "\;Extended Properties=""text;HDR=Yes;FMT=Delimited"";"
+            strDBConnection = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strFolderName & "\;Extended Properties=""text;HDR=Yes;FMT=Delimited;IMEX=1;MAXSCANROWS=900"";"
         Else
             buttonLoad.Text = "Load"
         End If
@@ -86,6 +116,8 @@ Public Class LanSchoolClassListsHelper
         If (radioLoginName.Enabled) Then
             ' Fill the Login Name teacher list
             FillTableUsingQuery("SELECT DISTINCT TeacherLoginName FROM [ClassesByTeacherLoginName.csv]", tableTeacherLoginName)
+
+
 
             comboLoginName.DataSource = New BindingSource(tableTeacherLoginName, Nothing)
             comboLoginName.DisplayMember = "TeacherLoginName"
@@ -173,7 +205,15 @@ Public Class LanSchoolClassListsHelper
             listboxStudents.Enabled = True
             buttonAddNewStudent.Enabled = True
 
-            Dim strQuery As String = "SELECT DISTINCT [" & strStudentNameField & "] As StudentName FROM [" & strStudentsForClassCSV & "] WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "' ORDER BY " & strStudentNameField
+            Dim strQuery As String = "Select DISTINCT [" & strStudentNameField & "] As StudentName FROM [" & strStudentsForClassCSV & "]"
+
+            If IsNumeric(listboxClassName.SelectedValue.ToString) Then
+                strQuery &= " WHERE UniqueClassIdentifier=" & listboxClassName.SelectedValue.ToString
+            Else
+                strQuery &= " WHERE UniqueClassIdentifier='" & listboxClassName.SelectedValue.ToString & "'"
+            End If
+
+            strQuery &= " ORDER BY " & strStudentNameField
 
             ' Load students from CSV using OleDbAdapter
             FillTableUsingQuery(strQuery, tableStudentsByClass)
@@ -197,8 +237,20 @@ Public Class LanSchoolClassListsHelper
 
     End Sub
 
+    Private Sub AddToChangeLog(ByVal strAction As String, ByVal strFile As String, ByVal strLine As String)
+        If (Not My.Computer.FileSystem.FileExists(strChangeLogCSV)) Then
+            AddNewLineToFile(strChangeLogCSV, """Time"",""User"",""File"",""Action"",""Line""")
+        End If
+        AddNewLineToFile(strChangeLogCSV, String.Format("""{0}"",""{1}"",""{2}"",""{3}"",""{4}""", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), Environment.UserName, strFile, strAction, strLine))
+    End Sub
+
     Private Sub FormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
         MaximizeBox = False
+
+        If Not CheckAndFixRegistrySettings() Then
+            End
+        End If
+
         LoadCSVData(True) ' Load the information for the CSV files
     End Sub
 
@@ -225,9 +277,14 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub buttonLoad_Click(sender As Object, e As EventArgs) Handles buttonLoad.Click
         strFolderName = textboxFolderPath.Text ' Set folder name to textbox content
-
-
         LoadCSVData(True) ' Load the information for the CSV files
+    End Sub
+
+    Private Sub textboxFolderPath_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles textboxFolderPath.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            strFolderName = textboxFolderPath.Text ' Set folder name to textbox content
+            LoadCSVData(True) ' Load the information for the CSV files
+        End If
     End Sub
 
     Private Sub radio_CheckedChanged(sender As Object, e As EventArgs) Handles radioLoginName.CheckedChanged, radioMachineName.CheckedChanged, radioADName.CheckedChanged
@@ -380,6 +437,8 @@ Public Class LanSchoolClassListsHelper
         ' Set new line text
         Dim strNewLine As String = listboxClassName.SelectedValue.ToString & "," & strStudentName
 
+        If (boolChangeLog) Then AddToChangeLog("ADD", strStudentsForClassCSV, strNewLine)
+
         ' Add new line to file
         AddNewLineToFile(strFileName, strNewLine)
 
@@ -419,6 +478,9 @@ Public Class LanSchoolClassListsHelper
         ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
+
+        If (boolChangeLog) Then AddToChangeLog("ADD", strClassesByTeacherCSV, strNewLine)
+
         AddNewLineToFile(strFileName, strNewLine)
 
         EvaluateClassList() ' Update the list of classes, no need to update list of teachers, as it was locked
@@ -434,6 +496,9 @@ Public Class LanSchoolClassListsHelper
         ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
+
+        If (boolChangeLog) Then AddToChangeLog("ADD", strClassesByTeacherCSV, strNewLine)
+
         AddNewLineToFile(strFileName, strNewLine)
 
         LoadCSVData() ' Reload the list of teachers
@@ -459,6 +524,9 @@ Public Class LanSchoolClassListsHelper
         ' Add the new class to the file
         Dim strFileName As String = strFolderName & "\" & strClassesByTeacherCSV
         Dim strNewLine As String = AddNewUserOrClassForm.textboxTeacherName.Text & "," & AddNewUserOrClassForm.comboUniqueClassID.Text & "," & AddNewUserOrClassForm.textboxPersonalizedName.Text
+
+        If (boolChangeLog) Then AddToChangeLog("ADD", strClassesByTeacherCSV, strNewLine)
+
         AddNewLineToFile(strFileName, strNewLine)
 
         LoadCSVData() ' Reload the list of teachers
@@ -493,6 +561,8 @@ Public Class LanSchoolClassListsHelper
         For Each line As String In IO.File.ReadLines(filename) ' Recurse through the file line by line
             If (exactmatch And Not line.Equals(linematch)) Or (Not exactmatch And Not line.StartsWith(linematch)) Then
                 sb.AppendLine(line) ' Add line to string builder if it's not the line we wish to skip/delete
+            ElseIf (boolChangeLog) Then
+                AddToChangeLog("DELETE", filename.Substring(filename.LastIndexOf("\") + 1), line)
             End If
         Next
 
@@ -503,10 +573,14 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub FillTableUsingQuery(ByVal query As String, ByRef table As DataTable)
         ' Clear the table before filling with new data
-        table.Clear()
+        table = New DataTable()
 
         Using adapt As New OleDbDataAdapter(query, strDBConnection)
-            adapt.Fill(table)
+            Try
+                adapt.Fill(table)
+            Catch ex As OleDbException
+                MsgBox("failed")
+            End Try
         End Using
     End Sub
 
@@ -678,7 +752,7 @@ Public Class LanSchoolClassListsHelper
             Dim archive As ZipArchive = ZipFile.Open(strFileName, ZipArchiveMode.Create)
 
             Using archive
-                For Each strCSVFileName In {"ClassesByTeacherLoginName.csv", "StudentsForClassByLoginName.csv", "ClassesByTeacherMachineName.csv", "StudentsForClassByMachineName.csv", "ClassesByTeacherADName.csv", "StudentsForClassByADName.csv"}
+                For Each strCSVFileName In {"ClassesByTeacherLoginName.csv", "StudentsForClassByLoginName.csv", "ClassesByTeacherMachineName.csv", "StudentsForClassByMachineName.csv", "ClassesByTeacherADName.csv", "StudentsForClassByADName.csv", "ChangeLog.csv"}
                     If (File.Exists(strFolderName + "\" + strCSVFileName)) Then
                         archive.CreateEntryFromFile(strFolderName + "\" + strCSVFileName, strCSVFileName)
                     End If
@@ -705,6 +779,7 @@ Public Class LanSchoolClassListsHelper
             Dim boolMachineNameStudentsForClassCSV As Boolean = False
             Dim boolADNameClassesByTeacherCSV As Boolean = False
             Dim boolADNameStudentsForClassCSV As Boolean = False
+            Dim boolChangeLogCSV As Boolean = False
 
             Dim archive As ZipArchive = ZipFile.OpenRead(strFileName)
 
@@ -723,6 +798,8 @@ Public Class LanSchoolClassListsHelper
                             boolADNameClassesByTeacherCSV = True
                         Case "StudentsForClassByADName.csv"
                             boolADNameStudentsForClassCSV = True
+                        Case "ChangeLog.csv"
+                            boolChangeLogCSV = True
                     End Select
                 Next
 
@@ -751,10 +828,22 @@ Public Class LanSchoolClassListsHelper
                     End If
                 End If
 
+                If (boolChangeLogCSV) Then
+                    If MessageBox.Show("Are you sure you want to restore the ChangeLog from this backup?" & vbCrLf & "All changes since the backup will be lost.", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        ' Only run the restore if the end user clicks yes
+                        archive.GetEntry("ChangeLog.csv").ExtractToFile(strFolderName + "\ChangeLog.csv", True)
+                    End If
+                End If
             End Using
 
             LoadCSVData()
         End If
     End Sub
 
+    Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SettingsToolStripMenuItem.Click
+        SettingsDialog.CheckBoxEnableLogging.Checked = boolChangeLog
+        If SettingsDialog.ShowDialog() = DialogResult.OK Then
+            boolChangeLog = SettingsDialog.CheckBoxEnableLogging.Checked
+        End If
+    End Sub
 End Class

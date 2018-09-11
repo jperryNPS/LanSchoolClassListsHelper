@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class AddNewUserOrClassForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class AddNewUserOrClassForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.OKButton = New System.Windows.Forms.Button()
         Me.CancelButton1 = New System.Windows.Forms.Button()
@@ -52,11 +52,11 @@ Partial Class AddNewUserOrClassForm
         Me.CancelButton1.Text = "Cancel"
         Me.CancelButton1.UseVisualStyleBackColor = True
         '
-        'TeacherNameLabel
+        'labelTeacherNamePrompt
         '
         Me.labelTeacherNamePrompt.AutoSize = True
         Me.labelTeacherNamePrompt.Location = New System.Drawing.Point(12, 15)
-        Me.labelTeacherNamePrompt.Name = "TeacherNameLabel"
+        Me.labelTeacherNamePrompt.Name = "labelTeacherNamePrompt"
         Me.labelTeacherNamePrompt.Size = New System.Drawing.Size(122, 13)
         Me.labelTeacherNamePrompt.TabIndex = 0
         Me.labelTeacherNamePrompt.Text = "Teacher Machine Name"
@@ -70,11 +70,11 @@ Partial Class AddNewUserOrClassForm
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "Unique Class ID"
         '
-        'UniqueIDComboBox
+        'comboUniqueClassID
         '
         Me.comboUniqueClassID.FormattingEnabled = True
         Me.comboUniqueClassID.Location = New System.Drawing.Point(144, 46)
-        Me.comboUniqueClassID.Name = "UniqueIDComboBox"
+        Me.comboUniqueClassID.Name = "comboUniqueClassID"
         Me.comboUniqueClassID.Size = New System.Drawing.Size(146, 21)
         Me.comboUniqueClassID.TabIndex = 3
         '
@@ -87,17 +87,17 @@ Partial Class AddNewUserOrClassForm
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "Personalized Class Name"
         '
-        'PersonalizedNameTextBox
+        'textboxPersonalizedName
         '
         Me.textboxPersonalizedName.Location = New System.Drawing.Point(144, 80)
-        Me.textboxPersonalizedName.Name = "PersonalizedNameTextBox"
+        Me.textboxPersonalizedName.Name = "textboxPersonalizedName"
         Me.textboxPersonalizedName.Size = New System.Drawing.Size(146, 20)
         Me.textboxPersonalizedName.TabIndex = 5
         '
-        'TeacherNameTextBox
+        'textboxTeacherName
         '
         Me.textboxTeacherName.Location = New System.Drawing.Point(144, 12)
-        Me.textboxTeacherName.Name = "TeacherNameTextBox"
+        Me.textboxTeacherName.Name = "textboxTeacherName"
         Me.textboxTeacherName.Size = New System.Drawing.Size(146, 20)
         Me.textboxTeacherName.TabIndex = 8
         '

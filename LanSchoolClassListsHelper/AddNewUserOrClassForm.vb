@@ -4,4 +4,5 @@
         MaximizeBox = False
         MinimizeBox = False
     End Sub
+
 End Class
