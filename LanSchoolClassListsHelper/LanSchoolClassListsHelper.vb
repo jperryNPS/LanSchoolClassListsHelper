@@ -260,8 +260,7 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub tsitemAbout_Click(sender As Object, e As EventArgs) Handles tsitemAbout.Click
         ' Simply show the About Box when the user clicks about.
-        AboutBox.Visible = True
-        AboutBox.Activate()
+        AboutBox.ShowDialog()
     End Sub
 
     Private Sub OpenBrowseForFolder(sender As Object, e As EventArgs) Handles BrowseButton.Click, tsitemChangeDirectory.Click
@@ -576,11 +575,19 @@ Public Class LanSchoolClassListsHelper
         table = New DataTable()
 
         Using adapt As New OleDbDataAdapter(query, strDBConnection)
-            Try
-                adapt.Fill(table)
-            Catch ex As OleDbException
-                MsgBox(ex.Message)
-            End Try
+            Do
+                Try
+                    adapt.Fill(table)
+                    Exit Do
+                Catch ex As OleDbException
+                    Dim retry = MessageBox.Show(ex.Message, "Retry?", MessageBoxButtons.AbortRetryIgnore)
+                    If (retry = DialogResult.Ignore) Then
+                        Exit Do
+                    ElseIf (retry = DialogResult.Abort) Then
+                        End
+                    End If
+                End Try
+            Loop
         End Using
     End Sub
 
@@ -846,4 +853,5 @@ Public Class LanSchoolClassListsHelper
             boolChangeLog = SettingsDialog.CheckBoxEnableLogging.Checked
         End If
     End Sub
+
 End Class

@@ -30,12 +30,17 @@ Partial Class AddNewUserOrClassForm
         Me.Label3 = New System.Windows.Forms.Label()
         Me.textboxPersonalizedName = New System.Windows.Forms.TextBox()
         Me.textboxTeacherName = New System.Windows.Forms.TextBox()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'OKButton
         '
+        Me.OKButton.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.OKButton.Location = New System.Drawing.Point(134, 113)
+        Me.OKButton.Location = New System.Drawing.Point(135, 82)
         Me.OKButton.Name = "OKButton"
         Me.OKButton.Size = New System.Drawing.Size(75, 23)
         Me.OKButton.TabIndex = 6
@@ -44,8 +49,11 @@ Partial Class AddNewUserOrClassForm
         '
         'CancelButton1
         '
+        Me.CancelButton1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CancelButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CancelButton1.Location = New System.Drawing.Point(215, 113)
+        Me.CancelButton1.Location = New System.Drawing.Point(216, 82)
         Me.CancelButton1.Name = "CancelButton1"
         Me.CancelButton1.Size = New System.Drawing.Size(75, 23)
         Me.CancelButton1.TabIndex = 7
@@ -54,73 +62,121 @@ Partial Class AddNewUserOrClassForm
         '
         'labelTeacherNamePrompt
         '
+        Me.labelTeacherNamePrompt.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.labelTeacherNamePrompt.AutoSize = True
-        Me.labelTeacherNamePrompt.Location = New System.Drawing.Point(12, 15)
+        Me.labelTeacherNamePrompt.Location = New System.Drawing.Point(3, 0)
         Me.labelTeacherNamePrompt.Name = "labelTeacherNamePrompt"
-        Me.labelTeacherNamePrompt.Size = New System.Drawing.Size(122, 13)
+        Me.labelTeacherNamePrompt.Size = New System.Drawing.Size(126, 26)
         Me.labelTeacherNamePrompt.TabIndex = 0
         Me.labelTeacherNamePrompt.Text = "Teacher Machine Name"
+        Me.labelTeacherNamePrompt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label2
         '
+        Me.Label2.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 49)
+        Me.Label2.Location = New System.Drawing.Point(3, 26)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(83, 13)
+        Me.Label2.Size = New System.Drawing.Size(126, 27)
         Me.Label2.TabIndex = 2
         Me.Label2.Text = "Unique Class ID"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'comboUniqueClassID
         '
+        Me.comboUniqueClassID.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.SetColumnSpan(Me.comboUniqueClassID, 3)
         Me.comboUniqueClassID.FormattingEnabled = True
-        Me.comboUniqueClassID.Location = New System.Drawing.Point(144, 46)
+        Me.comboUniqueClassID.Location = New System.Drawing.Point(135, 29)
         Me.comboUniqueClassID.Name = "comboUniqueClassID"
-        Me.comboUniqueClassID.Size = New System.Drawing.Size(146, 21)
+        Me.comboUniqueClassID.Size = New System.Drawing.Size(156, 21)
         Me.comboUniqueClassID.TabIndex = 3
         '
         'Label3
         '
+        Me.Label3.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 83)
+        Me.Label3.Location = New System.Drawing.Point(3, 53)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(126, 13)
+        Me.Label3.Size = New System.Drawing.Size(126, 26)
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "Personalized Class Name"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'textboxPersonalizedName
         '
-        Me.textboxPersonalizedName.Location = New System.Drawing.Point(144, 80)
+        Me.textboxPersonalizedName.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.SetColumnSpan(Me.textboxPersonalizedName, 3)
+        Me.textboxPersonalizedName.Location = New System.Drawing.Point(135, 56)
         Me.textboxPersonalizedName.Name = "textboxPersonalizedName"
-        Me.textboxPersonalizedName.Size = New System.Drawing.Size(146, 20)
+        Me.textboxPersonalizedName.Size = New System.Drawing.Size(156, 20)
         Me.textboxPersonalizedName.TabIndex = 5
         '
         'textboxTeacherName
         '
-        Me.textboxTeacherName.Location = New System.Drawing.Point(144, 12)
+        Me.textboxTeacherName.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.SetColumnSpan(Me.textboxTeacherName, 3)
+        Me.textboxTeacherName.Location = New System.Drawing.Point(135, 3)
         Me.textboxTeacherName.Name = "textboxTeacherName"
-        Me.textboxTeacherName.Size = New System.Drawing.Size(146, 20)
+        Me.textboxTeacherName.Size = New System.Drawing.Size(156, 20)
         Me.textboxTeacherName.TabIndex = 8
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 4
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 81.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 81.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.CancelButton1, 3, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.labelTeacherNamePrompt, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.OKButton, 2, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.textboxTeacherName, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.comboUniqueClassID, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.textboxPersonalizedName, 1, 2)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(12, 12)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 5
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(294, 108)
+        Me.TableLayoutPanel1.TabIndex = 9
         '
         'AddNewUserOrClassForm
         '
         Me.AcceptButton = Me.OKButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(302, 149)
-        Me.Controls.Add(Me.textboxTeacherName)
-        Me.Controls.Add(Me.textboxPersonalizedName)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.comboUniqueClassID)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.labelTeacherNamePrompt)
-        Me.Controls.Add(Me.CancelButton1)
-        Me.Controls.Add(Me.OKButton)
+        Me.CancelButton = Me.CancelButton1
+        Me.ClientSize = New System.Drawing.Size(318, 132)
+        Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Name = "AddNewUserOrClassForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Add New User or Class"
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
@@ -132,4 +188,5 @@ Partial Class AddNewUserOrClassForm
     Public WithEvents comboUniqueClassID As ComboBox
     Public WithEvents textboxPersonalizedName As TextBox
     Friend WithEvents textboxTeacherName As TextBox
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
 End Class
