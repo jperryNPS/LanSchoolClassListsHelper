@@ -579,7 +579,7 @@ Public Class LanSchoolClassListsHelper
             Try
                 adapt.Fill(table)
             Catch ex As OleDbException
-                MsgBox("failed")
+                MsgBox(ex.Message)
             End Try
         End Using
     End Sub
