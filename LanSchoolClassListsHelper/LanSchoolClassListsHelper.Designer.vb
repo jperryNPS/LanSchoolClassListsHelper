@@ -77,6 +77,7 @@ Partial Class LanSchoolClassListsHelper
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
+        Me.tsitemShowClassesWithNoTeacher = New System.Windows.Forms.ToolStripMenuItem()
         Me.rcmenuStudentListBox.SuspendLayout()
         Me.rcmenuClassListBox.SuspendLayout()
         Me.MenuStrip.SuspendLayout()
@@ -416,35 +417,35 @@ Partial Class LanSchoolClassListsHelper
         'tsitemChangeDirectory
         '
         Me.tsitemChangeDirectory.Name = "tsitemChangeDirectory"
-        Me.tsitemChangeDirectory.Size = New System.Drawing.Size(180, 22)
+        Me.tsitemChangeDirectory.Size = New System.Drawing.Size(175, 22)
         Me.tsitemChangeDirectory.Text = "&Change Directory..."
         '
         'ToolStripSeparator3
         '
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(172, 6)
         '
         'tsitemSaveABackup
         '
         Me.tsitemSaveABackup.Name = "tsitemSaveABackup"
-        Me.tsitemSaveABackup.Size = New System.Drawing.Size(180, 22)
+        Me.tsitemSaveABackup.Size = New System.Drawing.Size(175, 22)
         Me.tsitemSaveABackup.Text = "&Save a Backup..."
         '
         'tsitemRestoreABackup
         '
         Me.tsitemRestoreABackup.Name = "tsitemRestoreABackup"
-        Me.tsitemRestoreABackup.Size = New System.Drawing.Size(180, 22)
+        Me.tsitemRestoreABackup.Size = New System.Drawing.Size(175, 22)
         Me.tsitemRestoreABackup.Text = "&Restore a Backup..."
         '
         'ToolStripSeparator5
         '
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(172, 6)
         '
         'tsitemExit
         '
         Me.tsitemExit.Name = "tsitemExit"
-        Me.tsitemExit.Size = New System.Drawing.Size(180, 22)
+        Me.tsitemExit.Size = New System.Drawing.Size(175, 22)
         Me.tsitemExit.Text = "E&xit"
         '
         'HelpToolStripMenuItem
@@ -457,7 +458,7 @@ Partial Class LanSchoolClassListsHelper
         'tsitemAbout
         '
         Me.tsitemAbout.Name = "tsitemAbout"
-        Me.tsitemAbout.Size = New System.Drawing.Size(180, 22)
+        Me.tsitemAbout.Size = New System.Drawing.Size(116, 22)
         Me.tsitemAbout.Text = "&About..."
         '
         'MenuStrip
@@ -499,7 +500,7 @@ Partial Class LanSchoolClassListsHelper
         '
         'ViewToolStripMenuItem
         '
-        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses, Me.tsitemShowOnlyEmptyClasses, Me.ToolStripSeparator4, Me.tsitemShowAllClassesByType})
+        Me.ViewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsitemHideEmptyClasses, Me.tsitemShowOnlyEmptyClasses, Me.ToolStripSeparator4, Me.tsitemShowAllClassesByType, Me.tsitemShowClassesWithNoTeacher})
         Me.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem"
         Me.ViewToolStripMenuItem.Size = New System.Drawing.Size(44, 20)
         Me.ViewToolStripMenuItem.Text = "&View"
@@ -507,24 +508,24 @@ Partial Class LanSchoolClassListsHelper
         'tsitemHideEmptyClasses
         '
         Me.tsitemHideEmptyClasses.Name = "tsitemHideEmptyClasses"
-        Me.tsitemHideEmptyClasses.Size = New System.Drawing.Size(205, 22)
+        Me.tsitemHideEmptyClasses.Size = New System.Drawing.Size(227, 22)
         Me.tsitemHideEmptyClasses.Text = "&Hide empty classes"
         '
         'tsitemShowOnlyEmptyClasses
         '
         Me.tsitemShowOnlyEmptyClasses.Name = "tsitemShowOnlyEmptyClasses"
-        Me.tsitemShowOnlyEmptyClasses.Size = New System.Drawing.Size(205, 22)
+        Me.tsitemShowOnlyEmptyClasses.Size = New System.Drawing.Size(227, 22)
         Me.tsitemShowOnlyEmptyClasses.Text = "&Show only empty classes"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(202, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(224, 6)
         '
         'tsitemShowAllClassesByType
         '
         Me.tsitemShowAllClassesByType.Name = "tsitemShowAllClassesByType"
-        Me.tsitemShowAllClassesByType.Size = New System.Drawing.Size(205, 22)
+        Me.tsitemShowAllClassesByType.Size = New System.Drawing.Size(227, 22)
         Me.tsitemShowAllClassesByType.Text = "Show &all classes by type"
         '
         'ToolsToolStripMenuItem
@@ -537,7 +538,7 @@ Partial Class LanSchoolClassListsHelper
         'SettingsToolStripMenuItem
         '
         Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(116, 22)
         Me.SettingsToolStripMenuItem.Text = "&Settings"
         '
         'OpenFileDialog
@@ -589,6 +590,13 @@ Partial Class LanSchoolClassListsHelper
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29.0!))
         Me.TableLayoutPanel3.Size = New System.Drawing.Size(430, 597)
         Me.TableLayoutPanel3.TabIndex = 21
+        '
+        'tsitemShowClassesWithNoTeacher
+        '
+        Me.tsitemShowClassesWithNoTeacher.Enabled = False
+        Me.tsitemShowClassesWithNoTeacher.Name = "tsitemShowClassesWithNoTeacher"
+        Me.tsitemShowClassesWithNoTeacher.Size = New System.Drawing.Size(253, 22)
+        Me.tsitemShowClassesWithNoTeacher.Text = "Show only classes with &no teacher"
         '
         'LanSchoolClassListsHelper
         '
@@ -665,4 +673,5 @@ Partial Class LanSchoolClassListsHelper
     Friend WithEvents ToolsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SettingsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
+    Friend WithEvents tsitemShowClassesWithNoTeacher As ToolStripMenuItem
 End Class

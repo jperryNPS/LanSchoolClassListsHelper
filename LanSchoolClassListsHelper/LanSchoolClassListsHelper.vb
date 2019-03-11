@@ -153,24 +153,36 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub EvaluateClassList()
 
-        Dim strQuery As String = "SELECT DISTINCT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "]"
+        Dim strQuery As String = ""
 
-        If Not tsitemShowAllClassesByType.Checked Then
-            strQuery &= " WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "'"
-            If tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
-                strQuery &= " AND "
+        If tsitemShowAllClassesByType.Checked Then
+            strQuery &= "SELECT DISTINCT [UniqueClassIdentifier], [UniqueClassIdentifier] as [Personalized Class Name], [UniqueClassIdentifier] as ClassDisplayName FROM [" & strStudentsForClassCSV & "] WHERE [UniqueClassIdentifier] NOT IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strClassesByTeacherCSV & "])"
+        End If
+        If Not tsitemShowClassesWithNoTeacher.Checked Then
+            If tsitemShowAllClassesByType.Checked Then strQuery &= " UNION "
+            strQuery &= "SELECT DISTINCT [UniqueClassIdentifier], [Personalized Class Name], [Personalized Class Name]&' ('&[UniqueClassIdentifier]&')' as ClassDisplayName FROM [" & strClassesByTeacherCSV & "]"
+            If Not tsitemShowAllClassesByType.Checked Then
+                strQuery &= " WHERE " & strTeacherNameField & "='" & strSelectedTeacher & "'"
+                If tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
+                    strQuery &= " AND "
+                End If
+            ElseIf tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
+                strQuery &= " WHERE "
             End If
-        ElseIf tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
-            strQuery &= " WHERE "
-        End If
 
-        If tsitemHideEmptyClasses.Checked Then
-            strQuery &= "[UniqueClassIdentifier] IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
-        ElseIf tsitemShowOnlyEmptyClasses.Checked Then
-            strQuery &= "[UniqueClassIdentifier] NOT IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
-        End If
 
-        strQuery &= " ORDER BY [Personalized Class Name]"
+            If tsitemHideEmptyClasses.Checked Or tsitemShowOnlyEmptyClasses.Checked Then
+                strQuery &= "[UniqueClassIdentifier]"
+
+                If tsitemShowOnlyEmptyClasses.Checked Then
+                    strQuery &= " NOT"
+                End If
+
+                strQuery &= " IN (SELECT DISTINCT [UniqueClassIdentifier] FROM [" & strStudentsForClassCSV & "])"
+            End If
+
+            strQuery &= " ORDER BY [Personalized Class Name]"
+        End If
 
         ' Load classes from CSV using OleDbAdapter
         FillTableUsingQuery(strQuery, tableClassesByTeacher)
@@ -406,7 +418,10 @@ Public Class LanSchoolClassListsHelper
         rcitemAddTeacher.Enabled = (listboxClassName.SelectedIndex >= 0)
     End Sub
 
-    Private Sub DeleteStudentFromClass(sender As Object, e As EventArgs) Handles rcitemDeleteStudent.Click
+    Private Sub rcitemDeleteStudent_Click(sender As Object, e As EventArgs) Handles rcitemDeleteStudent.Click
+        DeleteStudentFromClass()
+    End Sub
+    Private Sub DeleteStudentFromClass()
 
         ' Prompt for confirmation on deletion
         If MessageBox.Show("Are you sure you want to delete this student from this class?", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.No Then
@@ -446,7 +461,10 @@ Public Class LanSchoolClassListsHelper
 
     End Sub
 
-    Private Sub DeleteClassFromTeacher(sender As Object, e As EventArgs) Handles rcitemDeleteClass.Click
+    Private Sub rcitemDeleteClass_Click(sender As Object, e As EventArgs) Handles rcitemDeleteClass.Click
+        DeleteClassFromTeacher()
+    End Sub
+    Private Sub DeleteClassFromTeacher()
 
         ' Confirm deletion
         If MessageBox.Show("Are you sure you want to delete this class from this teacher?", "Are you sure?", MessageBoxButtons.YesNo) = DialogResult.No Then
@@ -696,6 +714,7 @@ Public Class LanSchoolClassListsHelper
 
     Private Sub tsitemShowAllClassesByType_Click(sender As Object, e As EventArgs) Handles tsitemShowAllClassesByType.Click
         tsitemShowAllClassesByType.Checked = Not tsitemShowAllClassesByType.Checked
+        tsitemShowClassesWithNoTeacher.Enabled = tsitemShowAllClassesByType.Checked
 
         If tsitemShowAllClassesByType.Checked Then
             ' Show all classes, regardless of teacher name
@@ -706,6 +725,8 @@ Public Class LanSchoolClassListsHelper
             comboADName.Enabled = False
 
         Else
+            tsitemShowClassesWithNoTeacher.Checked = False
+
             ' Show only classes based on selected teacher name in combo box
 
             ' Enable combo boxes
@@ -854,4 +875,22 @@ Public Class LanSchoolClassListsHelper
         End If
     End Sub
 
+    Private Sub ListboxStudents_KeyUp(sender As Object, e As KeyEventArgs) Handles listboxStudents.KeyUp
+        If e.KeyValue = Keys.Delete Then
+            DeleteStudentFromClass()
+        End If
+    End Sub
+
+    Private Sub ListboxClassName_KeyUp(sender As Object, e As KeyEventArgs) Handles listboxClassName.KeyUp
+        If e.KeyValue = Keys.Delete Then
+            DeleteClassFromTeacher()
+        End If
+    End Sub
+
+    Private Sub tsitemShowClassesWithNoTeacher_Click(sender As Object, e As EventArgs) Handles tsitemShowClassesWithNoTeacher.Click
+        tsitemShowClassesWithNoTeacher.Checked = Not tsitemShowClassesWithNoTeacher.Checked
+
+        EvaluateClassList()
+
+    End Sub
 End Class
