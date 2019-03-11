@@ -257,8 +257,6 @@ Public Class LanSchoolClassListsHelper
     End Sub
 
     Private Sub FormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
-        MaximizeBox = False
-
         If Not CheckAndFixRegistrySettings() Then
             End
         End If

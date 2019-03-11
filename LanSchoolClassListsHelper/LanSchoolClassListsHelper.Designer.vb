@@ -605,7 +605,6 @@ Partial Class LanSchoolClassListsHelper
         Me.ClientSize = New System.Drawing.Size(454, 636)
         Me.Controls.Add(Me.TableLayoutPanel3)
         Me.Controls.Add(Me.MenuStrip)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.MainMenuStrip = Me.MenuStrip
         Me.Name = "LanSchoolClassListsHelper"
         Me.Text = "LanSchool Class Lists Helper"
